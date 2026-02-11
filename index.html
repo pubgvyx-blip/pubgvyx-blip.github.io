@@ -1,12 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <title>KRAKEN UC SHOP</title>
-<script type="module">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<style>
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top, #0f1020, #050510);
+  color:white;
+}
+
+header {
+  padding:20px;
+  font-size:28px;
+  font-weight:bold;
+  text-align:center;
+  background: linear-gradient(90deg,#6a00ff,#ff0077);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.section {
+  margin:30px;
+  padding:20px;
+  background:rgba(255,255,255,0.05);
+  border-radius:15px;
+  box-shadow:0 0 25px rgba(140,0,255,0.3);
+}
+
+.products {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
+.card {
+  padding:20px;
+  border-radius:15px;
+  background:linear-gradient(145deg,#12122a,#1c1c3a);
+  box-shadow:0 0 15px rgba(255,0,150,0.3);
+  transition:0.3s;
+}
+
+.card:hover {
+  transform:scale(1.05);
+  box-shadow:0 0 30px rgba(255,0,200,0.6);
+}
+
+button {
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:linear-gradient(90deg,#6a00ff,#ff0077);
+  color:white;
+  font-weight:bold;
+}
+
+input, textarea {
+  width:100%;
+  padding:8px;
+  margin:5px 0;
+  border-radius:6px;
+  border:none;
+}
+
+.admin-panel {
+  display:none;
+  margin-top:20px;
+  padding:15px;
+  background:rgba(255,0,0,0.1);
+  border:1px solid red;
+  border-radius:10px;
+}
+.review {
+  margin:10px 0;
+  padding:10px;
+  background:rgba(255,255,255,0.05);
+  border-radius:8px;
+}
+.delete-btn {
+  background:red;
+  margin-left:10px;
+}
+</style>
+</head>
+<body>
+
+<header>KRAKEN UC SHOP 💎</header>
+
+<div class="section">
+<h2>🔥 Каталог UC</h2>
+<div class="products" id="productList"></div>
+</div>
+
+<div class="section">
+<h2>🔐 Вход</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Пароль">
+<button onclick="login()">Войти</button>
+<button onclick="register()">Регистрация</button>
+</div>
+
+<div class="section">
+<h2>⭐ Отзывы</h2>
+<textarea id="reviewText" placeholder="Написать отзыв..."></textarea>
+<button onclick="addReview()">Отправить</button>
+<div id="reviews"></div>
+</div>
+
+<div class="section admin-panel" id="adminPanel">
+<h2>👑 Админ-панель</h2>
+<p>Вы вошли как админ</p>
+<div id="adminControls"></div>
+</div>
+
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } 
 from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
@@ -24,97 +138,94 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-window.login = async function(){
-  const email = document.getElementById("email").value;
-  const pass = document.getElementById("pass").value;
-  await signInWithEmailAndPassword(auth,email,pass);
-  alert("Вход выполнен");
-  loadReviews();
+const adminEmail = "admin@gmail.com"; // твой админ email
+
+const products = [
+  {name:"60 UC", price:"1.99$"},
+  {name:"325 UC", price:"4.99$"},
+  {name:"660 UC", price:"9.99$"},
+  {name:"1800 UC", price:"24.99$"}
+];
+
+function renderProducts() {
+  const list = document.getElementById("productList");
+  list.innerHTML="";
+  products.forEach((p,i)=>{
+    list.innerHTML += `
+      <div class="card">
+        <h3>${p.name}</h3>
+        <p>${p.price}</p>
+        <button onclick="alert('Покупка в разработке')">Купить</button>
+        <button class="delete-btn" onclick="deleteProduct(${i})">Удалить</button>
+      </div>`;
+  });
 }
+renderProducts();
+
+window.deleteProduct = function(i){
+  if(currentUserEmail===adminEmail){
+    products.splice(i,1);
+    renderProducts();
+  }
+}
+
+window.register = async function(){
+  await createUserWithEmailAndPassword(auth,
+    document.getElementById("email").value,
+    document.getElementById("password").value
+  );
+}
+
+window.login = async function(){
+  await signInWithEmailAndPassword(auth,
+    document.getElementById("email").value,
+    document.getElementById("password").value
+  );
+}
+
+let currentUserEmail=null;
+
+onAuthStateChanged(auth, user=>{
+  if(user){
+    currentUserEmail=user.email;
+    if(user.email===adminEmail){
+      document.getElementById("adminPanel").style.display="block";
+    }
+  }
+});
 
 window.addReview = async function(){
   const text = document.getElementById("reviewText").value;
   await addDoc(collection(db,"reviews"),{
     text:text,
-    user:auth.currentUser.email,
-    created:Date.now()
+    user:currentUserEmail
   });
   loadReviews();
 }
 
 async function loadReviews(){
   const querySnapshot = await getDocs(collection(db,"reviews"));
-  const list = document.getElementById("reviews");
-  list.innerHTML="";
+  const reviewsDiv=document.getElementById("reviews");
+  reviewsDiv.innerHTML="";
   querySnapshot.forEach((docu)=>{
-    list.innerHTML+=`
+    const data=docu.data();
+    reviewsDiv.innerHTML+=`
     <div class="review">
-      <b>${docu.data().user}</b>
-      <p>${docu.data().text}</p>
+      <b>${data.user}</b>: ${data.text}
+      ${currentUserEmail===adminEmail?
+      `<button class="delete-btn" onclick="deleteReview('${docu.id}')">X</button>`:""}
     </div>`;
   });
 }
+loadReviews();
 
-onAuthStateChanged(auth,(user)=>{
-  if(user){
+window.deleteReview = async function(id){
+  if(currentUserEmail===adminEmail){
+    await deleteDoc(doc(db,"reviews",id));
     loadReviews();
   }
-});
-
+}
 </script>
-
-<style>
-body{
-  background:#0f0f1c;
-  color:white;
-  font-family:sans-serif;
-}
-.card{
-  background:#1b1b2e;
-  padding:20px;
-  margin:10px;
-  border-radius:12px;
-}
-button{
-  background:#ff0055;
-  color:white;
-  border:none;
-  padding:10px;
-  border-radius:8px;
-  cursor:pointer;
-}
-.review{
-  background:#222;
-  padding:10px;
-  margin:10px;
-  border-radius:10px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>KRAKEN UC SHOP</h1>
-
-<div class="card">
-<h3>Вход</h3>
-<input id="email" placeholder="email"><br><br>
-<input id="pass" type="password" placeholder="пароль"><br><br>
-<button onclick="login()">Войти</button>
-</div>
-
-<div class="card">
-<h3>Добавить отзыв</h3>
-<textarea id="reviewText"></textarea><br><br>
-<button onclick="addReview()">Отправить</button>
-</div>
-
-<div class="card">
-<h3>Отзывы</h3>
-<div id="reviews"></div>
-</div>
-
-<a href="admin.html">Админ-панель</a>
 
 </body>
 </html>
