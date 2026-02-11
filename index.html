@@ -7,172 +7,209 @@
 
 <style>
 
-* {
-    box-sizing: border-box;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: url("https://images.unsplash.com/photo-1605902711622-cfb43c4437d1") no-repeat center center/cover;
-    color: white;
-}
-
-.overlay {
-    background: rgba(10,15,30,0.85);
-    min-height: 100vh;
+body{
+background: linear-gradient(180deg,#0a0f1c,#111827);
+color:white;
+overflow-x:hidden;
 }
 
 /* HEADER */
 
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+position:fixed;
+width:100%;
+top:0;
+background:rgba(10,15,28,0.9);
+backdrop-filter:blur(6px);
+z-index:1000;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: orange;
+.logo{
+font-size:22px;
+font-weight:bold;
+color:orange;
+animation: glow 2s infinite alternate;
 }
 
-.logo span {
-    color: white;
+@keyframes glow{
+from{ text-shadow:0 0 5px orange;}
+to{ text-shadow:0 0 20px orange;}
 }
 
-nav a {
-    color: white;
-    margin-left: 20px;
-    text-decoration: none;
+nav a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+transition:0.3s;
+}
+
+nav a:hover{
+color:orange;
 }
 
 /* HERO */
 
-.hero {
-    text-align: center;
-    padding: 80px 20px 40px 20px;
+.hero{
+padding-top:140px;
+text-align:center;
+padding-bottom:60px;
 }
 
-.hero h1 {
-    font-size: 42px;
+.hero h1{
+font-size:42px;
+animation: fadeIn 1.5s ease forwards;
+opacity:0;
 }
 
-.hero span {
-    color: orange;
+.hero span{
+color:orange;
 }
 
-/* SECTION */
-
-.section {
-    padding: 40px 20px;
-    text-align: center;
+@keyframes fadeIn{
+to{opacity:1;}
 }
 
-.cards {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+/* CARDS */
+
+.section{
+padding:40px 20px;
+text-align:center;
 }
 
-.card {
-    background: rgba(30,41,59,0.95);
-    padding: 25px;
-    width: 260px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(255,140,0,0.3);
+.cards{
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
 }
 
-.price {
-    font-size: 22px;
-    margin: 10px 0;
-    color: orange;
+.card{
+background:#1f2937;
+padding:25px;
+width:260px;
+border-radius:12px;
+box-shadow:0 0 15px rgba(255,140,0,0.2);
+transform:translateY(40px);
+opacity:0;
+animation: cardAppear 0.8s forwards;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 6px;
-    border: none;
+.card:nth-child(1){animation-delay:0.2s;}
+.card:nth-child(2){animation-delay:0.4s;}
+.card:nth-child(3){animation-delay:0.6s;}
+.card:nth-child(4){animation-delay:0.8s;}
+
+@keyframes cardAppear{
+to{
+transform:translateY(0);
+opacity:1;
+}
 }
 
-.btn {
-    width: 100%;
-    padding: 12px;
-    background: orange;
-    color: black;
-    font-weight: bold;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+.card:hover{
+transform:translateY(-5px);
+box-shadow:0 0 20px orange;
+}
+
+.price{
+color:orange;
+margin:10px 0;
+font-size:20px;
+}
+
+input{
+width:100%;
+padding:10px;
+border-radius:6px;
+border:none;
+margin-bottom:10px;
+}
+
+.btn{
+width:100%;
+padding:12px;
+background:linear-gradient(45deg,orange,#ff6600);
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+.btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px orange;
 }
 
 /* POPUP */
 
-.popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    justify-content: center;
-    align-items: center;
+.popup{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+justify-content:center;
+align-items:center;
 }
 
-.popup-content {
-    background: #1e293b;
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    width: 300px;
+.popup-content{
+background:#1f2937;
+padding:30px;
+border-radius:10px;
+width:300px;
+text-align:center;
+animation:fadeIn 0.4s ease forwards;
 }
 
-.manager-btn {
-    display: block;
-    margin: 15px 0;
-    padding: 12px;
-    background: orange;
-    color: black;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
+.manager-btn{
+width:100%;
+padding:12px;
+margin:10px 0;
+background:orange;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
 }
 
-.close-btn {
-    margin-top: 10px;
-    cursor: pointer;
+.manager-btn:hover{
+background:#ff6600;
+}
+
+.close-btn{
+margin-top:10px;
+cursor:pointer;
+font-size:14px;
+color:#ccc;
+}
+
+footer{
+text-align:center;
+padding:30px;
+margin-top:40px;
+font-size:14px;
+color:#aaa;
 }
 
 /* MOBILE */
 
-@media (max-width: 768px) {
-
-.hero h1 {
-    font-size: 28px;
-}
-
-.cards {
-    flex-direction: column;
-    align-items: center;
-}
-
-.card {
-    width: 90%;
-}
-
-}
-
-footer {
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
+@media(max-width:768px){
+.hero h1{font-size:28px;}
+.card{width:90%;}
 }
 
 </style>
@@ -180,10 +217,8 @@ footer {
 
 <body>
 
-<div class="overlay">
-
 <header>
-<div class="logo">🐙 KRAKEN <span>UC SHOP</span></div>
+<div class="logo">🐙 KRAKEN UC</div>
 <nav>
 <a href="#">Главная</a>
 <a href="#">Магазин</a>
@@ -192,7 +227,7 @@ footer {
 
 <section class="hero">
 <h1>Купить <span>UC</span> для PUBG</h1>
-<p>Мгновенно. Надёжно. Безопасно.</p>
+<p>Быстро. Надежно. Автоматически.</p>
 </section>
 
 <section class="section">
@@ -203,47 +238,40 @@ footer {
 <div class="card">
 <h3>60 UC</h3>
 <div class="price">65 ₽</div>
-<input type="text" placeholder="Введите игровой ID" id="id1">
+<input type="text" placeholder="Игровой ID" id="id1">
 <button class="btn" onclick="openPopup('60 UC','65 ₽','id1')">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>325 UC</h3>
 <div class="price">315 ₽</div>
-<input type="text" placeholder="Введите игровой ID" id="id2">
+<input type="text" placeholder="Игровой ID" id="id2">
 <button class="btn" onclick="openPopup('325 UC','315 ₽','id2')">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>600 + 120 UC</h3>
 <div class="price">650 ₽</div>
-<input type="text" placeholder="Введите игровой ID" id="id3">
+<input type="text" placeholder="Игровой ID" id="id3">
 <button class="btn" onclick="openPopup('600 + 120 UC','650 ₽','id3')">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>1500 + 300 UC</h3>
 <div class="price">1500 ₽</div>
-<input type="text" placeholder="Введите игровой ID" id="id4">
+<input type="text" placeholder="Игровой ID" id="id4">
 <button class="btn" onclick="openPopup('1500 + 300 UC','1500 ₽','id4')">Оплатить</button>
 </div>
 
 </div>
 </section>
 
-<!-- POPUP -->
-
 <div class="popup" id="popup">
 <div class="popup-content">
 <h3>Выберите менеджера</h3>
 
-<button class="manager-btn" onclick="sendToManager('vyxeyes')">
-@vyxeyes
-</button>
-
-<button class="manager-btn" onclick="sendToManager('manager_jeka')">
-@manager_jeka
-</button>
+<button class="manager-btn" onclick="sendToManager('vyxeyes')">@vyxeyes</button>
+<button class="manager-btn" onclick="sendToManager('manager_jeka')">@manager_jeka</button>
 
 <div class="close-btn" onclick="closePopup()">Закрыть</div>
 </div>
@@ -253,43 +281,30 @@ footer {
 © 2026 KRAKEN UC SHOP
 </footer>
 
-</div>
-
 <script>
+let selectedPackage="";
+let selectedID="";
 
-let selectedPackage = "";
-let selectedID = "";
-
-function openPopup(packageName, price, inputId) {
-
-    let gameID = document.getElementById(inputId).value;
-
-    if(gameID === "") {
-        alert("Введите игровой ID");
-        return;
-    }
-
-    selectedPackage = "Пакет: " + packageName + "\nЦена: " + price;
-    selectedID = "Игровой ID: " + gameID;
-
-    document.getElementById("popup").style.display = "flex";
+function openPopup(pkg,price,inputId){
+let id=document.getElementById(inputId).value;
+if(id===""){alert("Введите игровой ID");return;}
+selectedPackage="Пакет: "+pkg+" | Цена: "+price;
+selectedID="ID: "+id;
+document.getElementById("popup").style.display="flex";
 }
 
-function closePopup() {
-    document.getElementById("popup").style.display = "none";
+function closePopup(){
+document.getElementById("popup").style.display="none";
 }
 
-function sendToManager(username) {
-
-    let text = encodeURIComponent(
-        "Здравствуйте! Хочу купить:\n\n" +
-        selectedPackage + "\n" +
-        selectedID
-    );
-
-    window.open("https://t.me/" + username + "?text=" + text, "_blank");
+function sendToManager(user){
+let text=encodeURIComponent(
+"Здравствуйте! Хочу купить:\n\n"+
+selectedPackage+"\n"+
+selectedID
+);
+window.open("https://t.me/"+user+"?text="+text,"_blank");
 }
-
 </script>
 
 </body>
