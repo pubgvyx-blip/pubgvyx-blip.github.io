@@ -6,22 +6,15 @@
 <title>KRAKEN UC SHOP</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
 
 body{
-background: linear-gradient(180deg,#0a0f1c,#111827);
+background:linear-gradient(180deg,#0a0f1c,#111827);
 color:white;
 overflow-x:hidden;
 }
 
 /* HEADER */
-
 header{
 display:flex;
 justify-content:space-between;
@@ -39,82 +32,45 @@ z-index:1000;
 font-size:22px;
 font-weight:bold;
 color:orange;
-animation: glow 2s infinite alternate;
-}
-
-@keyframes glow{
-from{ text-shadow:0 0 5px orange;}
-to{ text-shadow:0 0 20px orange;}
 }
 
 nav a{
 color:white;
 margin-left:20px;
 text-decoration:none;
+cursor:pointer;
 transition:0.3s;
 }
 
-nav a:hover{
-color:orange;
-}
+nav a:hover{color:orange;}
 
 /* HERO */
-
 .hero{
-padding-top:140px;
+padding-top:130px;
 text-align:center;
-padding-bottom:60px;
+padding-bottom:40px;
 }
 
-.hero h1{
-font-size:42px;
-animation: fadeIn 1.5s ease forwards;
-opacity:0;
-}
-
-.hero span{
-color:orange;
-}
-
-@keyframes fadeIn{
-to{opacity:1;}
-}
+.hero h1{font-size:38px;}
+.hero span{color:orange;}
 
 /* CARDS */
-
-.section{
-padding:40px 20px;
-text-align:center;
-}
+.section{padding:40px 20px;text-align:center;}
 
 .cards{
 display:flex;
 justify-content:center;
-gap:25px;
+gap:20px;
 flex-wrap:wrap;
 }
 
 .card{
 background:#1f2937;
-padding:25px;
+padding:20px;
 width:260px;
 border-radius:12px;
-box-shadow:0 0 15px rgba(255,140,0,0.2);
-transform:translateY(40px);
-opacity:0;
-animation: cardAppear 0.8s forwards;
-}
-
-.card:nth-child(1){animation-delay:0.2s;}
-.card:nth-child(2){animation-delay:0.4s;}
-.card:nth-child(3){animation-delay:0.6s;}
-.card:nth-child(4){animation-delay:0.8s;}
-
-@keyframes cardAppear{
-to{
-transform:translateY(0);
-opacity:1;
-}
+box-shadow:0 0 10px rgba(255,140,0,0.2);
+transition:0.3s;
 }
 
 .card:hover{
@@ -122,96 +78,113 @@ transform:translateY(-5px);
 box-shadow:0 0 20px orange;
 }
 
-.price{
-color:orange;
-margin:10px 0;
-font-size:20px;
-}
+.price{color:orange;margin:10px 0;}
 
 input{
 width:100%;
-padding:10px;
+padding:8px;
 border-radius:6px;
 border:none;
-margin-bottom:10px;
+margin-bottom:8px;
 }
 
 .btn{
 width:100%;
-padding:12px;
-background:linear-gradient(45deg,orange,#ff6600);
-border:none;
-border-radius:6px;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-}
-
-.btn:hover{
-transform:scale(1.05);
-box-shadow:0 0 15px orange;
-}
-
-/* POPUP */
-
-.popup{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.8);
-justify-content:center;
-align-items:center;
-}
-
-.popup-content{
-background:#1f2937;
-padding:30px;
-border-radius:10px;
-width:300px;
-text-align:center;
-animation:fadeIn 0.4s ease forwards;
-}
-
-.manager-btn{
-width:100%;
-padding:12px;
-margin:10px 0;
+padding:10px;
 background:orange;
 border:none;
 border-radius:6px;
 cursor:pointer;
 font-weight:bold;
+transition:0.3s;
 }
 
-.manager-btn:hover{
-background:#ff6600;
+.btn:hover{background:#ff6600;}
+
+/* REVIEWS */
+.reviews{
+margin-top:50px;
 }
 
-.close-btn{
-margin-top:10px;
-cursor:pointer;
-font-size:14px;
-color:#ccc;
+.review-box{
+background:#1f2937;
+padding:15px;
+margin:10px auto;
+max-width:500px;
+border-radius:8px;
 }
 
-footer{
+.stars{color:gold;}
+
+/* POPUPS */
+.popup{
+display:none;
+position:fixed;
+top:0;left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+justify-content:center;
+align-items:center;
+z-index:2000;
+animation:fade 0.3s;
+}
+
+.popup-content{
+background:#1f2937;
+padding:25px;
+border-radius:10px;
+width:300px;
 text-align:center;
-padding:30px;
-margin-top:40px;
-font-size:14px;
-color:#aaa;
+animation:slide 0.3s ease;
+}
+
+@keyframes slide{
+from{transform:translateY(-20px);opacity:0;}
+to{transform:translateY(0);opacity:1;}
+}
+
+@keyframes fade{
+from{opacity:0;}to{opacity:1;}
+}
+
+.manager-btn{
+width:100%;
+padding:10px;
+margin:8px 0;
+background:orange;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.close{margin-top:10px;cursor:pointer;color:#aaa;}
+
+/* INFO PANEL */
+#infoPanel{
+display:none;
+max-width:600px;
+margin:30px auto;
+background:#1f2937;
+padding:20px;
+border-radius:10px;
+animation:fade 0.5s;
+}
+
+.info-btn{
+margin-top:20px;
+padding:10px 20px;
+background:orange;
+border:none;
+border-radius:6px;
+cursor:pointer;
 }
 
 /* MOBILE */
-
 @media(max-width:768px){
-.hero h1{font-size:28px;}
 .card{width:90%;}
+.hero h1{font-size:26px;}
 }
-
 </style>
 </head>
 
@@ -220,18 +193,18 @@ color:#aaa;
 <header>
 <div class="logo">🐙 KRAKEN UC</div>
 <nav>
-<a href="#">Главная</a>
-<a href="#">Магазин</a>
+<a onclick="openSocial()">Главная</a>
+<a onclick="toggleInfo()">info by vyx</a>
 </nav>
 </header>
 
 <section class="hero">
 <h1>Купить <span>UC</span> для PUBG</h1>
-<p>Быстро. Надежно. Автоматически.</p>
+<p>Безопасно. Быстро. Надежно.</p>
 </section>
 
 <section class="section">
-<h2>Выберите пакет</h2>
+<h2>Пакеты</h2>
 
 <div class="cards">
 
@@ -249,47 +222,94 @@ color:#aaa;
 <button class="btn" onclick="openPopup('325 UC','315 ₽','id2')">Оплатить</button>
 </div>
 
-<div class="card">
-<h3>600 + 120 UC</h3>
-<div class="price">650 ₽</div>
-<input type="text" placeholder="Игровой ID" id="id3">
-<button class="btn" onclick="openPopup('600 + 120 UC','650 ₽','id3')">Оплатить</button>
 </div>
 
-<div class="card">
-<h3>1500 + 300 UC</h3>
-<div class="price">1500 ₽</div>
-<input type="text" placeholder="Игровой ID" id="id4">
-<button class="btn" onclick="openPopup('1500 + 300 UC','1500 ₽','id4')">Оплатить</button>
+<div class="reviews">
+<h2>Отзывы</h2>
+
+<div class="review-box">
+<div class="stars">★★★★★</div>
+<p>Очень быстро пришли UC, спасибо!</p>
+</div>
+
+<div class="review-box">
+<div class="stars">★★★★★</div>
+<p>Лучший магазин, беру не первый раз.</p>
+</div>
+
+<div class="review-box">
+<div class="stars">★★★★☆</div>
+<p>Все ок, менеджер отвечает быстро.</p>
 </div>
 
 </div>
+
 </section>
 
+<!-- SOCIAL POPUP -->
+<div class="popup" id="socialPopup">
+<div class="popup-content">
+<h3>Наши соц сети</h3>
+
+<a href="https://t.me/pubgm_kraken" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" width="40">
+</a>
+
+<a href="https://www.tiktok.com/@pubgm_kraken02?_r=1&_t=ZS-93pqc9l1gXa" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" width="40">
+</a>
+
+<div class="close" onclick="closeSocial()">Закрыть</div>
+</div>
+</div>
+
+<!-- ORDER POPUP -->
 <div class="popup" id="popup">
 <div class="popup-content">
 <h3>Выберите менеджера</h3>
-
 <button class="manager-btn" onclick="sendToManager('vyxeyes')">@vyxeyes</button>
 <button class="manager-btn" onclick="sendToManager('manager_jeka')">@manager_jeka</button>
-
-<div class="close-btn" onclick="closePopup()">Закрыть</div>
+<div class="close" onclick="closePopup()">Закрыть</div>
 </div>
 </div>
 
-<footer>
-© 2026 KRAKEN UC SHOP
-</footer>
+<!-- INFO PANEL -->
+<div id="infoPanel">
+<p>
+Здравствуй читатель, этот пост создан для того, что бы сказать - 
+создатель сайта является эдитором в тик токе, так что просьба подписаться 
+на его тг канал
+</p>
+<button class="info-btn" onclick="window.open('https://t.me/vyxedith','_blank')">
+Перейти в Telegram канал
+</button>
+</div>
 
 <script>
 let selectedPackage="";
 let selectedID="";
+let lastClick=0;
+
+/* Anti-spam 5 секунд */
+function antiSpam(){
+let now=Date.now();
+if(now-lastClick<5000){
+alert("Подождите 5 секунд перед повторной попыткой");
+return false;
+}
+lastClick=now;
+return true;
+}
 
 function openPopup(pkg,price,inputId){
+if(!antiSpam())return;
+
 let id=document.getElementById(inputId).value;
-if(id===""){alert("Введите игровой ID");return;}
+if(id.length<4){alert("Введите корректный ID");return;}
+
 selectedPackage="Пакет: "+pkg+" | Цена: "+price;
 selectedID="ID: "+id;
+
 document.getElementById("popup").style.display="flex";
 }
 
@@ -304,6 +324,19 @@ selectedPackage+"\n"+
 selectedID
 );
 window.open("https://t.me/"+user+"?text="+text,"_blank");
+}
+
+function openSocial(){
+document.getElementById("socialPopup").style.display="flex";
+}
+
+function closeSocial(){
+document.getElementById("socialPopup").style.display="none";
+}
+
+function toggleInfo(){
+let panel=document.getElementById("infoPanel");
+panel.style.display = panel.style.display==="block" ? "none" : "block";
 }
 </script>
 
