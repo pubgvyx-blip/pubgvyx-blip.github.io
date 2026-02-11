@@ -1,15 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ADMIN PANEL</title>
-<script type="module">
+<style>
+:root {
+  --bg: #0b1226;
+  --card: #111a34;
+  --text: #edf2ff;
+  --muted: #9eabd1;
+  --accent: #14d9ff;
+  --danger: #ff5a86;
+}
 
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  background: radial-gradient(circle at top right, rgba(20,217,255,.2), transparent 40%), linear-gradient(150deg, #080e1d, #121c3d);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.wrapper {
+  max-width: 980px;
+  margin: auto;
+  padding: 28px 16px;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.panel {
+  background: rgba(17, 26, 52, 0.88);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.item {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.item:last-child {
+  border-bottom: 0;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(135deg, #2f3f72, #25315a);
+}
+
+button.danger {
+  background: linear-gradient(135deg, #ff5a86, #d74068);
+}
+
+.meta {
+  color: var(--muted);
+}
+
+a {
+  color: var(--accent);
+}
+</style>
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } 
-from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAdE6pSRtNx9AlEFR2UrFO87_fpFXLg9C4",
@@ -21,63 +90,89 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-async function loadReviews(){
-  const querySnapshot = await getDocs(collection(db,"reviews"));
+async function loadReviews() {
+  const querySnapshot = await getDocs(collection(db, "reviews"));
   const list = document.getElementById("reviews");
-  list.innerHTML="";
-  querySnapshot.forEach((docu)=>{
-    list.innerHTML+=`
-    <div>
-      <b>${docu.data().user}</b>
-      <p>${docu.data().text}</p>
-      <button onclick="deleteReview('${docu.id}')">Удалить</button>
-    </div>`;
+  list.innerHTML = "";
+
+  querySnapshot.forEach((docu) => {
+    const row = document.createElement("div");
+    row.className = "item";
+    row.innerHTML = `
+      <div>
+        <b>${docu.data().user || "Гость"}</b>
+        <div>${docu.data().text || ""}</div>
+      </div>
+      <button type="button" class="danger" data-id="${docu.id}" data-action="delete-review">Удалить</button>
+    `;
+    list.appendChild(row);
   });
 }
 
-window.deleteReview = async function(id){
-  await deleteDoc(doc(db,"reviews",id));
-  loadReviews();
-}
-
-async function loadUsers(){
-  const querySnapshot = await getDocs(collection(db,"users"));
+async function loadUsers() {
+  const querySnapshot = await getDocs(collection(db, "users"));
   const list = document.getElementById("users");
-  list.innerHTML="";
-  querySnapshot.forEach((docu)=>{
-    list.innerHTML+=`
-    <div>
-      ${docu.data().email}
-      <button onclick="blockUser('${docu.id}')">Заблокировать</button>
-    </div>`;
+  list.innerHTML = "";
+
+  querySnapshot.forEach((docu) => {
+    const row = document.createElement("div");
+    row.className = "item";
+    row.innerHTML = `
+      <div>
+        <div>${docu.data().email || "без email"}</div>
+        <div class="meta">ID: ${docu.id}</div>
+      </div>
+      <button type="button" data-id="${docu.id}" data-action="block-user">Заблокировать</button>
+    `;
+    list.appendChild(row);
   });
 }
 
-window.blockUser = async function(id){
-  await updateDoc(doc(db,"users",id),{blocked:true});
-  alert("Пользователь заблокирован");
-}
+document.addEventListener("click", async (event) => {
+  const button = event.target.closest("button");
+  if (!button) {
+    return;
+  }
 
-onAuthStateChanged(auth,(user)=>{
-  if(user){
+  const action = button.dataset.action;
+  const id = button.dataset.id;
+
+  if (action === "delete-review") {
+    await deleteDoc(doc(db, "reviews", id));
     loadReviews();
-    loadUsers();
-  }else{
-    alert("Нет доступа");
-    window.location="index.html";
+  }
+
+  if (action === "block-user") {
+    await updateDoc(doc(db, "users", id), { blocked: true });
+    alert("Пользователь заблокирован");
   }
 });
 
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loadReviews();
+    loadUsers();
+  } else {
+    alert("Нет доступа");
+    window.location = "index.html";
+  }
+});
 </script>
+</head>
+<body>
+<div class="wrapper">
+  <h1>ADMIN PANEL</h1>
+  <p><a href="index.html">← Вернуться в магазин</a></p>
 
-<body style="background:black;color:white">
-<h1>ADMIN PANEL</h1>
+  <div class="panel">
+    <h2>Отзывы</h2>
+    <div id="reviews"></div>
+  </div>
 
-<h2>Отзывы</h2>
-<div id="reviews"></div>
-
-<h2>Пользователи</h2>
-<div id="users"></div>
-
+  <div class="panel">
+    <h2>Пользователи</h2>
+    <div id="users"></div>
+  </div>
+</div>
 </body>
 </html>
