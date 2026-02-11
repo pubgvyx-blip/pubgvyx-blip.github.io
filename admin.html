@@ -1,178 +1,268 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADMIN PANEL</title>
-<style>
-:root {
-  --bg: #0b1226;
-  --card: #111a34;
-  --text: #edf2ff;
-  --muted: #9eabd1;
-  --accent: #14d9ff;
-  --danger: #ff5a86;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAKEN | Admin</title>
+  <style>
+    :root {
+      --bg: #0a1022;
+      --card: #131d3f;
+      --line: rgba(255,255,255,.1);
+      --text: #edf2ff;
+      --muted: #9ba8cd;
+      --accent: #18d6ff;
+      --danger: #ff5d8d;
+      --ok: #68ffac;
+    }
 
-body {
-  margin: 0;
-  font-family: "Inter", "Segoe UI", Arial, sans-serif;
-  background: radial-gradient(circle at top right, rgba(20,217,255,.2), transparent 40%), linear-gradient(150deg, #080e1d, #121c3d);
-  color: var(--text);
-  min-height: 100vh;
-}
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top right, rgba(24,214,255,.2), transparent 40%), linear-gradient(145deg, #070d1a, #111d3f);
+      min-height: 100vh;
+    }
 
-.wrapper {
-  max-width: 980px;
-  margin: auto;
-  padding: 28px 16px;
-}
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
 
-h1 {
-  margin-top: 0;
-}
+    .card {
+      background: rgba(19, 29, 63, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
 
-.panel {
-  background: rgba(17, 26, 52, 0.88);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 14px;
-}
+    .item {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
 
-.item {
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding: 10px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
+    .item:last-child { border-bottom: 0; }
 
-.item:last-child {
-  border-bottom: 0;
-}
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #334679, #24345f);
+    }
 
-button {
-  border: 0;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-weight: 600;
-  cursor: pointer;
-  color: white;
-  background: linear-gradient(135deg, #2f3f72, #25315a);
-}
+    button.danger { background: linear-gradient(135deg, #ff5d8d, #d84370); }
+    button.ok { background: linear-gradient(135deg, #35ba76, #2d9d64); }
 
-button.danger {
-  background: linear-gradient(135deg, #ff5a86, #d74068);
-}
+    .muted { color: var(--muted); }
+    .status { min-height: 20px; color: var(--muted); margin: 6px 0 0; }
+    .status.ok { color: var(--ok); }
+    .status.err { color: var(--danger); }
 
-.meta {
-  color: var(--muted);
-}
-
-a {
-  color: var(--accent);
-}
-</style>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAdE6pSRtNx9AlEFR2UrFO87_fpFXLg9C4",
-  authDomain: "krakenuc-dc537.firebaseapp.com",
-  projectId: "krakenuc-dc537"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-async function loadReviews() {
-  const querySnapshot = await getDocs(collection(db, "reviews"));
-  const list = document.getElementById("reviews");
-  list.innerHTML = "";
-
-  querySnapshot.forEach((docu) => {
-    const row = document.createElement("div");
-    row.className = "item";
-    row.innerHTML = `
-      <div>
-        <b>${docu.data().user || "Гость"}</b>
-        <div>${docu.data().text || ""}</div>
-      </div>
-      <button type="button" class="danger" data-id="${docu.id}" data-action="delete-review">Удалить</button>
-    `;
-    list.appendChild(row);
-  });
-}
-
-async function loadUsers() {
-  const querySnapshot = await getDocs(collection(db, "users"));
-  const list = document.getElementById("users");
-  list.innerHTML = "";
-
-  querySnapshot.forEach((docu) => {
-    const row = document.createElement("div");
-    row.className = "item";
-    row.innerHTML = `
-      <div>
-        <div>${docu.data().email || "без email"}</div>
-        <div class="meta">ID: ${docu.id}</div>
-      </div>
-      <button type="button" data-id="${docu.id}" data-action="block-user">Заблокировать</button>
-    `;
-    list.appendChild(row);
-  });
-}
-
-document.addEventListener("click", async (event) => {
-  const button = event.target.closest("button");
-  if (!button) {
-    return;
-  }
-
-  const action = button.dataset.action;
-  const id = button.dataset.id;
-
-  if (action === "delete-review") {
-    await deleteDoc(doc(db, "reviews", id));
-    loadReviews();
-  }
-
-  if (action === "block-user") {
-    await updateDoc(doc(db, "users", id), { blocked: true });
-    alert("Пользователь заблокирован");
-  }
-});
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    loadReviews();
-    loadUsers();
-  } else {
-    alert("Нет доступа");
-    window.location = "index.html";
-  }
-});
-</script>
+    a { color: var(--accent); }
+  </style>
 </head>
 <body>
-<div class="wrapper">
-  <h1>ADMIN PANEL</h1>
-  <p><a href="index.html">← Вернуться в магазин</a></p>
+  <div class="wrap">
+    <h1>ADMIN PANEL</h1>
+    <p><a href="index.html">← Вернуться в магазин</a></p>
+    <p class="muted">Управление отзывами, заказами и пользователями.</p>
+    <div id="status" class="status"></div>
 
-  <div class="panel">
-    <h2>Отзывы</h2>
-    <div id="reviews"></div>
+    <section class="card">
+      <h2>Заказы</h2>
+      <div id="orders"></div>
+    </section>
+
+    <section class="card">
+      <h2>Отзывы</h2>
+      <div id="reviews"></div>
+    </section>
+
+    <section class="card">
+      <h2>Пользователи</h2>
+      <div id="users"></div>
+    </section>
   </div>
 
-  <div class="panel">
-    <h2>Пользователи</h2>
-    <div id="users"></div>
-  </div>
-</div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      deleteDoc,
+      updateDoc,
+      doc,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAdE6pSRtNx9AlEFR2UrFO87_fpFXLg9C4",
+      authDomain: "krakenuc-dc537.firebaseapp.com",
+      projectId: "krakenuc-dc537"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const statusNode = document.getElementById("status");
+
+    function setStatus(text, type = "") {
+      statusNode.textContent = text;
+      statusNode.className = `status ${type}`.trim();
+    }
+
+    function drawEmpty(container, text = "Пусто") {
+      container.innerHTML = `<div class="muted">${text}</div>`;
+    }
+
+    async function loadOrders() {
+      const container = document.getElementById("orders");
+      container.innerHTML = "";
+      const snap = await getDocs(query(collection(db, "orders"), orderBy("createdAt", "desc")));
+
+      if (snap.empty) {
+        drawEmpty(container, "Заказов нет");
+        return;
+      }
+
+      snap.forEach((row) => {
+        const data = row.data();
+        const item = document.createElement("div");
+        item.className = "item";
+        item.innerHTML = `
+          <div>
+            <strong>${data.product || "товар"}</strong> • ${data.price || 0} ₽
+            <div>PUBG ID: ${data.pubgId || "-"}</div>
+            <div>Контакт: ${data.contact || "-"}</div>
+            <div class="muted">Статус: ${data.status || "new"}</div>
+          </div>
+          <div>
+            <button type="button" class="ok" data-action="done-order" data-id="${row.id}">Готово</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    async function loadReviews() {
+      const container = document.getElementById("reviews");
+      container.innerHTML = "";
+      const snap = await getDocs(query(collection(db, "reviews"), orderBy("date", "desc")));
+
+      if (snap.empty) {
+        drawEmpty(container, "Отзывов нет");
+        return;
+      }
+
+      snap.forEach((row) => {
+        const data = row.data();
+        const item = document.createElement("div");
+        item.className = "item";
+        item.innerHTML = `
+          <div>
+            <strong>${data.user || "Гость"}</strong>
+            <div>${data.text || ""}</div>
+          </div>
+          <div>
+            <button type="button" class="danger" data-action="delete-review" data-id="${row.id}">Удалить</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    async function loadUsers() {
+      const container = document.getElementById("users");
+      container.innerHTML = "";
+      const snap = await getDocs(collection(db, "users"));
+
+      if (snap.empty) {
+        drawEmpty(container, "Пользователей нет");
+        return;
+      }
+
+      snap.forEach((row) => {
+        const data = row.data();
+        const item = document.createElement("div");
+        item.className = "item";
+        item.innerHTML = `
+          <div>
+            <div>${data.email || "без email"}</div>
+            <div class="muted">ID: ${row.id}</div>
+            <div class="muted">blocked: ${Boolean(data.blocked)}</div>
+          </div>
+          <div>
+            <button type="button" data-action="block-user" data-id="${row.id}">Заблокировать</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("button");
+      if (!button) {
+        return;
+      }
+
+      const action = button.dataset.action;
+      const id = button.dataset.id;
+
+      try {
+        if (action === "delete-review") {
+          await deleteDoc(doc(db, "reviews", id));
+          await loadReviews();
+          setStatus("Отзыв удалён", "ok");
+        }
+
+        if (action === "block-user") {
+          await updateDoc(doc(db, "users", id), { blocked: true });
+          await loadUsers();
+          setStatus("Пользователь заблокирован", "ok");
+        }
+
+        if (action === "done-order") {
+          await updateDoc(doc(db, "orders", id), { status: "done" });
+          await loadOrders();
+          setStatus("Заказ отмечен как выполненный", "ok");
+        }
+      } catch (error) {
+        setStatus(`Ошибка операции: ${error.message}`, "err");
+      }
+    });
+
+    async function bootstrap() {
+      try {
+        await loadOrders();
+        await loadReviews();
+        await loadUsers();
+        setStatus("Данные загружены", "ok");
+      } catch (error) {
+        setStatus(`Ошибка загрузки: ${error.message}`, "err");
+      }
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        alert("Нет доступа к админке");
+        window.location = "index.html";
+        return;
+      }
+      bootstrap();
+    });
+  </script>
 </body>
 </html>

@@ -1,478 +1,407 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRAKEN UC SHOP</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRAKEN UC SHOP</title>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<style>
-:root {
-    --bg-main: #0b1020;
-    --bg-card: rgba(16, 24, 48, 0.78);
-    --bg-card-strong: #121a35;
-    --text-main: #f4f7ff;
-    --text-secondary: #aeb8d6;
-    --brand: #7c4dff;
-    --brand-hover: #9b79ff;
-    --accent: #00d7ff;
-    --danger: #ff5f8f;
-    --warning: #ffd76d;
-    --shadow: 0 18px 40px rgba(7, 12, 32, 0.45);
-}
+  <style>
+    :root {
+      --bg: #090f1f;
+      --bg-2: #101a37;
+      --card: rgba(14, 23, 49, 0.85);
+      --line: rgba(255,255,255,.1);
+      --text: #eef2ff;
+      --muted: #9db1df;
+      --accent: #19d7ff;
+      --brand: #7556ff;
+      --success: #66ffa8;
+      --danger: #ff5a8f;
+      --warning: #ffd67e;
+    }
 
-* { box-sizing: border-box; }
+    * { box-sizing: border-box; }
 
-body {
-    margin: 0;
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    background:
-      radial-gradient(circle at 10% 20%, rgba(124, 77, 255, 0.28), transparent 30%),
-      radial-gradient(circle at 90% 10%, rgba(0, 215, 255, 0.18), transparent 30%),
-      linear-gradient(145deg, #080c1a, #12193a 60%, #0a1128);
-    color: var(--text-main);
-    min-height: 100vh;
-}
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 20%, rgba(117,86,255,.30), transparent 35%),
+        radial-gradient(circle at 90% 10%, rgba(25,215,255,.20), transparent 33%),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+      min-height: 100vh;
+    }
 
-h1 {
-    text-align: center;
-    padding: 34px 20px 10px;
-    margin: 0;
-    font-size: clamp(1.9rem, 3vw, 2.8rem);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    text-shadow: 0 0 22px rgba(124, 77, 255, 0.45);
-}
+    h1 {
+      margin: 0;
+      text-align: center;
+      padding: 30px 15px 8px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-size: clamp(2rem, 3.2vw, 2.9rem);
+      text-shadow: 0 0 18px rgba(117,86,255,.45);
+    }
 
-.subtitle {
-    margin: 0 auto 28px;
-    text-align: center;
-    color: var(--text-secondary);
-    max-width: 760px;
-    padding: 0 18px;
-}
+    .subtitle {
+      margin: 0 auto 24px;
+      max-width: 900px;
+      text-align: center;
+      color: var(--muted);
+      padding: 0 15px;
+    }
 
-.container {
-    max-width: 1120px;
-    margin: auto;
-    padding: 0 20px 28px;
-    display: grid;
-    gap: 20px;
-}
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px 32px;
+      display: grid;
+      gap: 16px;
+    }
 
-.card {
-    background: var(--bg-card);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    padding: 22px;
-}
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      backdrop-filter: blur(9px);
+    }
 
-.card h2 { margin-top: 0; margin-bottom: 14px; }
+    .card h2 { margin: 0 0 12px; }
 
-.auth-row,
-.order-row {
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
+    .grid-2 {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
 
-.actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
+    input, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #0f1938;
+      color: var(--text);
+      padding: 11px 12px;
+    }
 
-.products {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-}
+    textarea { min-height: 100px; resize: vertical; }
 
-.product {
-    background: linear-gradient(160deg, #151f40, #111933);
-    border: 1px solid rgba(124, 77, 255, 0.35);
-    border-radius: 14px;
-    padding: 18px;
-    transition: 0.22s ease;
-}
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
-.product:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.34);
-    border-color: rgba(0, 215, 255, 0.58);
-}
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--brand), #5a38e5);
+      transition: .2s ease;
+    }
 
-.price { font-size: 1.28rem; margin: 6px 0 12px; color: var(--accent); font-weight: 700; }
+    button:hover { transform: translateY(-1px); }
+    button.secondary { background: linear-gradient(135deg, #2e3b69, #1f2a4e); }
 
-button {
-    border: none;
-    background: linear-gradient(135deg, var(--brand), #5c32e0);
-    color: white;
-    padding: 10px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.2s ease;
-}
+    .products {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
 
-button:hover { background: linear-gradient(135deg, var(--brand-hover), #7149ee); transform: translateY(-1px); }
-button:active { transform: translateY(0); }
-button.secondary { background: linear-gradient(135deg, #27325d, #1d264b); }
-button.secondary:hover { background: linear-gradient(135deg, #324172, #25315d); }
+    .product {
+      border: 1px solid rgba(117,86,255,.45);
+      border-radius: 12px;
+      padding: 14px;
+      background: linear-gradient(155deg, #141f42, #101936);
+    }
 
-input, textarea {
-    width: 100%;
-    padding: 11px 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.18);
-    background: #0f1733;
-    color: white;
-}
+    .price { color: var(--accent); font-size: 1.2rem; font-weight: 700; margin: 6px 0 12px; }
+    .hint { color: var(--muted); margin: 0 0 10px; }
 
-textarea { min-height: 108px; resize: vertical; }
+    .status { min-height: 22px; margin-top: 8px; color: var(--muted); }
+    .status.success { color: var(--success); }
+    .status.error { color: var(--danger); }
+    .status.warning { color: var(--warning); }
 
-#reviews > div,
-#ordersPreview > div {
-    background: var(--bg-card-strong);
-    border-left: 4px solid var(--accent);
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    word-break: break-word;
-}
+    #reviews > div,
+    #ordersLocal > div {
+      background: #121d3e;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
 
-.hint {
-    margin: 0 0 10px;
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-}
+    .selected { color: var(--accent); font-weight: 700; }
 
-.selected-order {
-    margin: 0 0 10px;
-    color: var(--accent);
-    font-weight: 700;
-}
-
-.status {
-    min-height: 24px;
-    margin-top: 8px;
-    color: var(--text-secondary);
-}
-.status.error { color: var(--danger); }
-.status.success { color: #6bffa8; }
-.status.warning { color: var(--warning); }
-
-.admin-panel { display: none; border-color: rgba(0, 215, 255, 0.4); }
-
-@media (max-width: 640px) {
-  .container { padding: 0 14px 20px; }
-  .card { padding: 16px; }
-}
-</style>
+    @media (max-width: 640px) {
+      .card { padding: 14px; }
+    }
+  </style>
 </head>
 <body>
+  <h1>KRAKEN UC SHOP</h1>
+  <p class="subtitle">Код полностью обновлён: регистрация через Firebase Auth, заказ отправляется в Firestore `orders`, а при блокировке правил есть резерв в браузере и быстрый переход в Telegram.</p>
 
-<h1>KRAKEN UC SHOP</h1>
-<p class="subtitle">Покупка UC PUBG, авторизация и отзывы — в одном месте. Регистрация не должна падать из-за прав на Firestore, а заказ теперь реально сохраняется в `orders`.</p>
+  <main class="container">
+    <section class="card">
+      <h2>Вход / Регистрация</h2>
+      <div class="grid-2">
+        <input type="email" id="email" placeholder="Email" autocomplete="email">
+        <input type="password" id="password" placeholder="Пароль" autocomplete="current-password">
+      </div>
+      <div class="actions">
+        <button type="button" id="loginBtn">Войти</button>
+        <button type="button" id="registerBtn" class="secondary">Регистрация</button>
+      </div>
+      <div id="authStatus" class="status"></div>
+    </section>
 
-<div class="container">
+    <section class="card">
+      <h2>Товары UC PUBG</h2>
+      <p class="hint">Шаг 1: нажмите «Купить», затем заполните данные заказа ниже.</p>
+      <div class="products">
+        <article class="product">
+          <h3>60 UC</h3>
+          <p class="price">65 ₽</p>
+          <button type="button" class="buyBtn" data-name="60 UC" data-price="65">Купить</button>
+        </article>
+        <article class="product">
+          <h3>325 UC</h3>
+          <p class="price">319 ₽</p>
+          <button type="button" class="buyBtn" data-name="325 UC" data-price="319">Купить</button>
+        </article>
+        <article class="product">
+          <h3>660 UC</h3>
+          <p class="price">619 ₽</p>
+          <button type="button" class="buyBtn" data-name="660 UC" data-price="619">Купить</button>
+        </article>
+      </div>
+    </section>
 
-<div class="card">
-  <h2>Вход и регистрация</h2>
-  <div class="auth-row">
-    <input type="email" id="email" placeholder="Email" autocomplete="email">
-    <input type="password" id="password" placeholder="Пароль" autocomplete="current-password">
-  </div>
-  <div class="actions" style="margin-top:10px;">
-    <button type="button" id="loginBtn">Войти</button>
-    <button type="button" id="registerBtn" class="secondary">Регистрация</button>
-  </div>
-  <div id="authStatus" class="status"></div>
-</div>
+    <section class="card" id="orderCard">
+      <h2>Оформление заказа</h2>
+      <p id="selectedProduct" class="selected">Шаг 2: выберите товар кнопкой «Купить».</p>
+      <div class="grid-2">
+        <input type="text" id="pubgId" placeholder="Ваш PUBG ID">
+        <input type="text" id="contact" placeholder="Контакт: Telegram/WhatsApp">
+      </div>
+      <div class="actions">
+        <button type="button" id="placeOrderBtn">Подтвердить заказ</button>
+        <button type="button" id="telegramBtn" class="secondary">Написать в Telegram</button>
+      </div>
+      <p class="hint">Куда уходит заказ: в Firestore коллекцию <b>orders</b>. Если доступ запрещён, сохраняем локально и показываем менеджеру через Telegram.</p>
+      <div id="orderStatus" class="status"></div>
+    </section>
 
-<div class="card">
-  <h2>UC PUBG</h2>
-  <p class="hint">Кнопка «Купить» не просто показывает alert: она выбирает позицию для оформления заказа ниже.</p>
-  <div class="products">
-    <div class="product">
-      <h3>60 UC</h3>
-      <p class="price">65 ₽</p>
-      <button type="button" data-name="60 UC" data-price="65" class="buy-btn">Купить</button>
-    </div>
-    <div class="product">
-      <h3>325 UC</h3>
-      <p class="price">319 ₽</p>
-      <button type="button" data-name="325 UC" data-price="319" class="buy-btn">Купить</button>
-    </div>
-    <div class="product">
-      <h3>660 UC</h3>
-      <p class="price">619 ₽</p>
-      <button type="button" data-name="660 UC" data-price="619" class="buy-btn">Купить</button>
-    </div>
-  </div>
-</div>
+    <section class="card">
+      <h2>Локальные заказы (резерв)</h2>
+      <div id="ordersLocal"></div>
+    </section>
 
-<div class="card" id="orderCard">
-  <h2>Оформление заказа</h2>
-  <p class="hint">Куда заказ оформляется: в коллекцию <b>orders</b> в Firestore. Если правила запрещают запись, заказ сохраняется локально в браузере (резервно).</p>
-  <p id="selectedOrder" class="selected-order">Выберите товар кнопкой «Купить».</p>
-  <div class="order-row">
-    <input type="text" id="pubgId" placeholder="Ваш PUBG ID">
-    <input type="text" id="contact" placeholder="Telegram или WhatsApp для связи">
-  </div>
-  <div class="actions" style="margin-top:10px;">
-    <button type="button" id="placeOrderBtn">Подтвердить заказ</button>
-  </div>
-  <div id="orderStatus" class="status"></div>
-</div>
+    <section class="card">
+      <h2>Отзывы</h2>
+      <textarea id="reviewText" placeholder="Ваш отзыв"></textarea>
+      <div class="actions">
+        <button type="button" id="reviewBtn">Отправить</button>
+      </div>
+      <div id="reviewStatus" class="status"></div>
+      <div id="reviews" style="margin-top: 12px;"></div>
+    </section>
+  </main>
 
-<div class="card">
-  <h2>Последние локальные заказы (резерв)</h2>
-  <div id="ordersPreview"></div>
-</div>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAdE6pSRtNx9AlEFR2UrFO87_fpFXLg9C4",
+      authDomain: "krakenuc-dc537.firebaseapp.com",
+      projectId: "krakenuc-dc537",
+      storageBucket: "krakenuc-dc537.firebasestorage.app",
+      messagingSenderId: "814916661220",
+      appId: "1:814916661220:web:1f4a7e050c390f9c27e1f1",
+    };
 
-<div class="card">
-  <h2>Добавить отзыв</h2>
-  <textarea id="reviewText" placeholder="Ваш отзыв"></textarea>
-  <div class="actions">
-    <button type="button" id="reviewBtn">Отправить</button>
-  </div>
-  <div id="reviewStatus" class="status"></div>
-</div>
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-<div class="card">
-  <h2>Отзывы</h2>
-  <div id="reviews"></div>
-</div>
+    const $ = (id) => document.getElementById(id);
+    const authStatus = $("authStatus");
+    const orderStatus = $("orderStatus");
+    const reviewStatus = $("reviewStatus");
+    const selectedProductLabel = $("selectedProduct");
+    const ordersLocal = $("ordersLocal");
+    const reviews = $("reviews");
 
-<div class="card admin-panel" id="adminPanel">
-  <h2>Админ-панель</h2>
-  <p>Удаление отзывов доступно в <a href="admin.html" style="color: var(--accent);">панели администратора</a>.</p>
-</div>
+    let selectedProduct = null;
 
-</div>
+    function setStatus(node, text, type = "") {
+      node.textContent = text;
+      node.className = `status ${type}`.trim();
+    }
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAdE6pSRtNx9AlEFR2UrFO87_fpFXLg9C4",
-  authDomain: "krakenuc-dc537.firebaseapp.com",
-  projectId: "krakenuc-dc537",
-  storageBucket: "krakenuc-dc537.firebasestorage.app",
-  messagingSenderId: "814916661220",
-  appId: "1:814916661220:web:1f4a7e050c390f9c27e1f1",
-};
+    function creds() {
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      if (!email || !password) {
+        setStatus(authStatus, "Введите email и пароль.", "error");
+        return null;
+      }
+      return { email, password };
+    }
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+    async function register() {
+      const data = creds();
+      if (!data) {
+        return;
+      }
 
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const authStatus = document.getElementById("authStatus");
-const reviewInput = document.getElementById("reviewText");
-const reviewStatus = document.getElementById("reviewStatus");
-const reviewsContainer = document.getElementById("reviews");
-const pubgIdInput = document.getElementById("pubgId");
-const contactInput = document.getElementById("contact");
-const selectedOrder = document.getElementById("selectedOrder");
-const orderStatus = document.getElementById("orderStatus");
-const ordersPreview = document.getElementById("ordersPreview");
+      try {
+        await auth.createUserWithEmailAndPassword(data.email, data.password);
+        setStatus(authStatus, "Регистрация успешна. Вы авторизованы.", "success");
+      } catch (error) {
+        setStatus(authStatus, `Ошибка регистрации: ${error.message}`, "error");
+      }
+    }
 
-let selectedProduct = null;
+    async function login() {
+      const data = creds();
+      if (!data) {
+        return;
+      }
 
-function setStatus(target, text, type = "") {
-  target.textContent = text;
-  target.className = `status ${type}`.trim();
-}
+      try {
+        await auth.signInWithEmailAndPassword(data.email, data.password);
+        setStatus(authStatus, "Вход выполнен.", "success");
+      } catch (error) {
+        setStatus(authStatus, `Ошибка входа: ${error.message}`, "error");
+      }
+    }
 
-function getCredentials() {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
+    function chooseProduct(name, price) {
+      selectedProduct = { name, price: Number(price) };
+      selectedProductLabel.textContent = `Шаг 2: выбран товар ${name} (${price} ₽).`;
+      setStatus(orderStatus, "Заполните PUBG ID и контакт, затем подтвердите заказ.");
+      $("orderCard").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
 
-  if (!email || !password) {
-    setStatus(authStatus, "Введите email и пароль.", "error");
-    return null;
-  }
+    function getLocalOrders() {
+      return JSON.parse(localStorage.getItem("ordersFallback") || "[]");
+    }
 
-  return { email, password };
-}
+    function saveLocalOrder(order) {
+      const list = getLocalOrders();
+      list.unshift(order);
+      localStorage.setItem("ordersFallback", JSON.stringify(list.slice(0, 8)));
+    }
 
-async function register() {
-  const credentials = getCredentials();
-  if (!credentials) {
-    return;
-  }
+    function renderLocalOrders() {
+      const list = getLocalOrders();
+      ordersLocal.innerHTML = "";
+      if (!list.length) {
+        ordersLocal.innerHTML = "<div>Пока пусто.</div>";
+        return;
+      }
 
-  try {
-    const result = await auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
-    setStatus(authStatus, "Аккаунт создан. Выполнен вход.", "success");
+      list.forEach((item) => {
+        const div = document.createElement("div");
+        div.innerHTML = `<strong>${item.product}</strong> • ${item.price} ₽<br>PUBG ID: ${item.pubgId}<br>Контакт: ${item.contact}`;
+        ordersLocal.appendChild(div);
+      });
+    }
 
-    try {
-      await db.collection("users").doc(result.user.uid).set({
-        email: credentials.email,
-        role: "user",
-        blocked: false,
+    async function placeOrder() {
+      if (!selectedProduct) {
+        setStatus(orderStatus, "Сначала выберите товар кнопкой «Купить».", "error");
+        return;
+      }
+
+      const pubgId = $("pubgId").value.trim();
+      const contact = $("contact").value.trim();
+      if (!pubgId || !contact) {
+        setStatus(orderStatus, "Заполните PUBG ID и контакт.", "error");
+        return;
+      }
+
+      const payload = {
+        product: selectedProduct.name,
+        price: selectedProduct.price,
+        pubgId,
+        contact,
+        customerEmail: auth.currentUser?.email || "guest",
+        customerUid: auth.currentUser?.uid || null,
+        status: "new",
         createdAt: Date.now(),
-      }, { merge: true });
-    } catch (profileError) {
-      setStatus(authStatus, "Аккаунт создан, но профиль в базе не записан (ограничение правил Firestore).", "warning");
+      };
+
+      try {
+        await db.collection("orders").add(payload);
+        setStatus(orderStatus, "Заказ отправлен в Firestore (orders).", "success");
+      } catch (error) {
+        saveLocalOrder(payload);
+        renderLocalOrders();
+        setStatus(orderStatus, `Firestore недоступен (${error.message}). Заказ сохранён локально.`, "warning");
+      }
     }
-  } catch (error) {
-    setStatus(authStatus, `Ошибка регистрации: ${error.message}`, "error");
-  }
-}
 
-async function login() {
-  const credentials = getCredentials();
-  if (!credentials) {
-    return;
-  }
-
-  try {
-    await auth.signInWithEmailAndPassword(credentials.email, credentials.password);
-    setStatus(authStatus, "Вход выполнен.", "success");
-  } catch (error) {
-    setStatus(authStatus, `Ошибка входа: ${error.message}`, "error");
-  }
-}
-
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    checkAdmin(user.uid);
-  }
-});
-
-function checkAdmin(uid) {
-  db.collection("users").doc(uid).get().then((doc) => {
-    if (doc.exists && doc.data().role === "admin") {
-      document.getElementById("adminPanel").style.display = "block";
+    function openTelegram() {
+      const productText = selectedProduct ? `${selectedProduct.name} ${selectedProduct.price}₽` : "товар не выбран";
+      const pubgId = $("pubgId").value.trim() || "не указан";
+      const contact = $("contact").value.trim() || "не указан";
+      const text = encodeURIComponent(`Здравствуйте! Хочу заказать ${productText}. PUBG ID: ${pubgId}. Контакт: ${contact}`);
+      window.open(`https://t.me/share/url?url=https://pubgvyx-blip.github.io&text=${text}`, "_blank");
     }
-  }).catch(() => {
-    // необязательная проверка
-  });
-}
 
-function selectProduct(name, price) {
-  selectedProduct = { name, price: Number(price) };
-  selectedOrder.textContent = `Выбрано: ${name} — ${price} ₽`;
-  setStatus(orderStatus, "Товар выбран, заполните PUBG ID и контакт.");
-  document.getElementById("orderCard").scrollIntoView({ behavior: "smooth", block: "center" });
-}
+    async function addReview() {
+      const text = $("reviewText").value.trim();
+      if (!text) {
+        setStatus(reviewStatus, "Введите текст отзыва.", "error");
+        return;
+      }
 
-function getLocalOrders() {
-  return JSON.parse(localStorage.getItem("localOrders") || "[]");
-}
+      try {
+        await db.collection("reviews").add({
+          text,
+          user: auth.currentUser?.email || "Гость",
+          date: Date.now(),
+        });
+        $("reviewText").value = "";
+        setStatus(reviewStatus, "Отзыв отправлен.", "success");
+      } catch (error) {
+        setStatus(reviewStatus, `Ошибка отправки отзыва: ${error.message}`, "error");
+      }
+    }
 
-function saveLocalOrder(order) {
-  const list = getLocalOrders();
-  list.unshift(order);
-  localStorage.setItem("localOrders", JSON.stringify(list.slice(0, 5)));
-}
-
-function renderLocalOrders() {
-  const list = getLocalOrders();
-  ordersPreview.innerHTML = "";
-
-  if (!list.length) {
-    ordersPreview.innerHTML = "<div>Пока нет резервных заказов.</div>";
-    return;
-  }
-
-  list.forEach((order) => {
-    const div = document.createElement("div");
-    div.innerHTML = `<strong>${order.product}</strong> • ${order.price} ₽<br>PUBG ID: ${order.pubgId}<br>Контакт: ${order.contact}`;
-    ordersPreview.appendChild(div);
-  });
-}
-
-async function placeOrder() {
-  if (!selectedProduct) {
-    setStatus(orderStatus, "Сначала выберите товар кнопкой «Купить».", "error");
-    return;
-  }
-
-  const pubgId = pubgIdInput.value.trim();
-  const contact = contactInput.value.trim();
-
-  if (!pubgId || !contact) {
-    setStatus(orderStatus, "Заполните PUBG ID и контакт.", "error");
-    return;
-  }
-
-  const orderPayload = {
-    product: selectedProduct.name,
-    price: selectedProduct.price,
-    pubgId,
-    contact,
-    email: auth.currentUser?.email || "guest",
-    uid: auth.currentUser?.uid || null,
-    status: "new",
-    date: Date.now(),
-  };
-
-  try {
-    await db.collection("orders").add(orderPayload);
-    setStatus(orderStatus, "Заказ отправлен в Firestore (orders). Ожидайте связь от менеджера.", "success");
-  } catch (error) {
-    saveLocalOrder(orderPayload);
-    renderLocalOrders();
-    setStatus(orderStatus, `Firestore отклонил запись: ${error.message}. Заказ сохранён локально как резерв.`, "warning");
-  }
-}
-
-async function addReview() {
-  const text = reviewInput.value.trim();
-  const user = auth.currentUser;
-
-  if (!text) {
-    setStatus(reviewStatus, "Напишите отзыв перед отправкой.", "error");
-    return;
-  }
-
-  try {
-    await db.collection("reviews").add({
-      text,
-      user: user?.email || "Гость",
-      uid: user?.uid || null,
-      date: Date.now(),
+    db.collection("reviews").orderBy("date", "desc").onSnapshot((snapshot) => {
+      reviews.innerHTML = "";
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const div = document.createElement("div");
+        div.innerHTML = `<strong>${data.user || "Гость"}</strong><br>${data.text || ""}`;
+        reviews.appendChild(div);
+      });
+    }, (error) => {
+      setStatus(reviewStatus, `Не удалось загрузить отзывы: ${error.message}`, "error");
     });
-    reviewInput.value = "";
-    setStatus(reviewStatus, "Отзыв отправлен.", "success");
-  } catch (error) {
-    setStatus(reviewStatus, `Ошибка отправки: ${error.message}`, "error");
-  }
-}
 
-db.collection("reviews").orderBy("date", "desc").onSnapshot((snapshot) => {
-  reviewsContainer.innerHTML = "";
-  snapshot.forEach((doc) => {
-    const div = document.createElement("div");
-    const data = doc.data();
-    const author = data.user ? `<strong>${data.user}</strong><br>` : "";
-    div.innerHTML = `${author}${data.text || ""}`;
-    reviewsContainer.appendChild(div);
-  });
-}, (error) => {
-  setStatus(reviewStatus, `Не удалось загрузить отзывы: ${error.message}`, "error");
-});
+    $("registerBtn").addEventListener("click", register);
+    $("loginBtn").addEventListener("click", login);
+    $("placeOrderBtn").addEventListener("click", placeOrder);
+    $("telegramBtn").addEventListener("click", openTelegram);
+    $("reviewBtn").addEventListener("click", addReview);
+    document.querySelectorAll(".buyBtn").forEach((btn) => {
+      btn.addEventListener("click", () => chooseProduct(btn.dataset.name, btn.dataset.price));
+    });
 
-document.getElementById("registerBtn").addEventListener("click", register);
-document.getElementById("loginBtn").addEventListener("click", login);
-document.getElementById("reviewBtn").addEventListener("click", addReview);
-document.getElementById("placeOrderBtn").addEventListener("click", placeOrder);
-document.querySelectorAll(".buy-btn").forEach((button) => {
-  button.addEventListener("click", () => {
-    selectProduct(button.dataset.name, button.dataset.price);
-  });
-});
-
-renderLocalOrders();
-</script>
-
+    renderLocalOrders();
+  </script>
 </body>
 </html>
