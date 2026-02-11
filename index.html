@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game UC - Купить UC</title>
+<title>KRAKEN UC SHOP</title>
 
 <style>
 body {
@@ -54,6 +54,7 @@ nav a {
     font-weight: bold;
     text-decoration: none;
     border-radius: 8px;
+    cursor: pointer;
 }
 
 .section {
@@ -71,14 +72,52 @@ nav a {
 .card {
     background: #1e293b;
     padding: 20px;
-    width: 220px;
+    width: 250px;
     border-radius: 10px;
 }
 
 .price {
-    font-size: 24px;
+    font-size: 22px;
     margin: 15px 0;
     color: orange;
+}
+
+/* POPUP */
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.manager-btn {
+    display: block;
+    margin: 15px 0;
+    padding: 12px;
+    background: orange;
+    color: black;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.close-btn {
+    margin-top: 15px;
+    color: white;
+    cursor: pointer;
 }
 
 footer {
@@ -93,53 +132,81 @@ footer {
 <body>
 
 <header>
-<h1>GAME UC</h1>
+<h1>KRAKEN UC SHOP</h1>
 <nav>
 <a href="#">Главная</a>
 <a href="#">Магазин</a>
-<a href="#">FAQ</a>
+<a href="#">Контакты</a>
 </nav>
 </header>
 
 <section class="hero">
 <h2>Купить <span>UC</span> для PUBG</h2>
-<p>Быстро. Безопасно. Выгодно.</p>
-<a href="#" class="btn">Купить сейчас</a>
-<a href="#" class="btn">Узнать цены</a>
+<p>Быстро. Надежно. Мгновенно.</p>
+<button class="btn" onclick="openPopup()">Оплатить</button>
 </section>
 
 <section class="section">
-<h2>Выберите количество UC</h2>
+<h2>Выберите пакет UC</h2>
 <div class="cards">
+
 <div class="card">
 <h3>60 UC</h3>
-<div class="price">€1.99</div>
-<a href="#" class="btn">Купить</a>
+<div class="price">65 ₽</div>
+<button class="btn" onclick="openPopup()">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>325 UC</h3>
-<div class="price">€4.99</div>
-<a href="#" class="btn">Купить</a>
+<div class="price">315 ₽</div>
+<button class="btn" onclick="openPopup()">Оплатить</button>
 </div>
 
 <div class="card">
-<h3>1000 UC</h3>
-<div class="price">€14.99</div>
-<a href="#" class="btn">Купить</a>
+<h3>600 + 120 UC</h3>
+<div class="price">650 ₽</div>
+<button class="btn" onclick="openPopup()">Оплатить</button>
 </div>
 
 <div class="card">
-<h3>3000 UC</h3>
-<div class="price">€39.99</div>
-<a href="#" class="btn">Купить</a>
+<h3>1500 + 300 UC</h3>
+<div class="price">1500 ₽</div>
+<button class="btn" onclick="openPopup()">Оплатить</button>
 </div>
+
 </div>
 </section>
 
+<!-- POPUP -->
+<div class="popup" id="popup">
+<div class="popup-content">
+<h3>Выберите менеджера</h3>
+
+<a class="manager-btn" href="https://t.me/vyxeyes" target="_blank">
+@vyxeyes
+</a>
+
+<a class="manager-btn" href="https://t.me/manager_jeka" target="_blank">
+@manager_jeka
+</a>
+
+<div class="close-btn" onclick="closePopup()">Закрыть</div>
+</div>
+</div>
+
 <footer>
-© 2026 Game UC. Все права защищены.
+© 2026 KRAKEN UC SHOP
 </footer>
+
+<script>
+function openPopup() {
+    document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+}
+</script>
 
 </body>
 </html>
