@@ -6,23 +6,40 @@
 <title>KRAKEN UC SHOP</title>
 
 <style>
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #0f172a;
+    background: url("https://images.unsplash.com/photo-1605902711622-cfb43c4437d1") no-repeat center center/cover;
     color: white;
 }
+
+.overlay {
+    background: rgba(10,15,30,0.85);
+    min-height: 100vh;
+}
+
+/* HEADER */
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 50px;
-    background: #0b1220;
+    padding: 20px 40px;
 }
 
-header h1 {
+.logo {
+    font-size: 24px;
+    font-weight: bold;
     color: orange;
+}
+
+.logo span {
+    color: white;
 }
 
 nav a {
@@ -31,35 +48,25 @@ nav a {
     text-decoration: none;
 }
 
+/* HERO */
+
 .hero {
     text-align: center;
-    padding: 100px 20px;
-    background: linear-gradient(to right, #1e293b, #0f172a);
+    padding: 80px 20px 40px 20px;
 }
 
-.hero h2 {
-    font-size: 48px;
+.hero h1 {
+    font-size: 42px;
 }
 
 .hero span {
     color: orange;
 }
 
-.btn {
-    display: inline-block;
-    margin: 15px 10px;
-    padding: 15px 25px;
-    background: orange;
-    color: black;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 8px;
-    cursor: pointer;
-    border: none;
-}
+/* SECTION */
 
 .section {
-    padding: 60px 20px;
+    padding: 40px 20px;
     text-align: center;
 }
 
@@ -71,16 +78,36 @@ nav a {
 }
 
 .card {
-    background: #1e293b;
+    background: rgba(30,41,59,0.95);
     padding: 25px;
     width: 260px;
     border-radius: 12px;
+    box-shadow: 0 0 15px rgba(255,140,0,0.3);
 }
 
 .price {
     font-size: 22px;
-    margin: 15px 0;
+    margin: 10px 0;
     color: orange;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: none;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: orange;
+    color: black;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 /* POPUP */
@@ -115,66 +142,90 @@ nav a {
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
+    width: 100%;
 }
 
 .close-btn {
-    margin-top: 15px;
-    color: white;
+    margin-top: 10px;
     cursor: pointer;
 }
 
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+.hero h1 {
+    font-size: 28px;
+}
+
+.cards {
+    flex-direction: column;
+    align-items: center;
+}
+
+.card {
+    width: 90%;
+}
+
+}
+
 footer {
-    background: #0b1220;
-    padding: 20px;
     text-align: center;
+    padding: 20px;
     margin-top: 40px;
 }
+
 </style>
 </head>
 
 <body>
 
+<div class="overlay">
+
 <header>
-<h1>KRAKEN UC SHOP</h1>
+<div class="logo">🐙 KRAKEN <span>UC SHOP</span></div>
 <nav>
 <a href="#">Главная</a>
 <a href="#">Магазин</a>
-<a href="#">Контакты</a>
 </nav>
 </header>
 
 <section class="hero">
-<h2>Купить <span>UC</span> для PUBG</h2>
-<p>Быстро. Надежно. Мгновенно.</p>
+<h1>Купить <span>UC</span> для PUBG</h1>
+<p>Мгновенно. Надёжно. Безопасно.</p>
 </section>
 
 <section class="section">
-<h2>Выберите пакет UC</h2>
+<h2>Выберите пакет</h2>
 
 <div class="cards">
 
 <div class="card">
 <h3>60 UC</h3>
 <div class="price">65 ₽</div>
-<button class="btn" onclick="openPopup('60 UC', '65 ₽')">Оплатить</button>
+<input type="text" placeholder="Введите игровой ID" id="id1">
+<button class="btn" onclick="openPopup('60 UC','65 ₽','id1')">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>325 UC</h3>
 <div class="price">315 ₽</div>
-<button class="btn" onclick="openPopup('325 UC', '315 ₽')">Оплатить</button>
+<input type="text" placeholder="Введите игровой ID" id="id2">
+<button class="btn" onclick="openPopup('325 UC','315 ₽','id2')">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>600 + 120 UC</h3>
 <div class="price">650 ₽</div>
-<button class="btn" onclick="openPopup('600 + 120 UC', '650 ₽')">Оплатить</button>
+<input type="text" placeholder="Введите игровой ID" id="id3">
+<button class="btn" onclick="openPopup('600 + 120 UC','650 ₽','id3')">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>1500 + 300 UC</h3>
 <div class="price">1500 ₽</div>
-<button class="btn" onclick="openPopup('1500 + 300 UC', '1500 ₽')">Оплатить</button>
+<input type="text" placeholder="Введите игровой ID" id="id4">
+<button class="btn" onclick="openPopup('1500 + 300 UC','1500 ₽','id4')">Оплатить</button>
 </div>
 
 </div>
@@ -202,11 +253,25 @@ footer {
 © 2026 KRAKEN UC SHOP
 </footer>
 
-<script>
-let selectedPackage = "";
+</div>
 
-function openPopup(packageName, price) {
+<script>
+
+let selectedPackage = "";
+let selectedID = "";
+
+function openPopup(packageName, price, inputId) {
+
+    let gameID = document.getElementById(inputId).value;
+
+    if(gameID === "") {
+        alert("Введите игровой ID");
+        return;
+    }
+
     selectedPackage = "Пакет: " + packageName + "\nЦена: " + price;
+    selectedID = "Игровой ID: " + gameID;
+
     document.getElementById("popup").style.display = "flex";
 }
 
@@ -215,14 +280,16 @@ function closePopup() {
 }
 
 function sendToManager(username) {
+
     let text = encodeURIComponent(
         "Здравствуйте! Хочу купить:\n\n" +
-        selectedPackage +
-        "\n\nМой игровой ID: "
+        selectedPackage + "\n" +
+        selectedID
     );
 
     window.open("https://t.me/" + username + "?text=" + text, "_blank");
 }
+
 </script>
 
 </body>
