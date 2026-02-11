@@ -1,197 +1,120 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KRAKEN UC SHOP</title>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } 
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAdE6pSRtNx9AlEFR2UrFO87_fpFXLg9C4",
+  authDomain: "krakenuc-dc537.firebaseapp.com",
+  projectId: "krakenuc-dc537",
+  storageBucket: "krakenuc-dc537.firebasestorage.app",
+  messagingSenderId: "814916661220",
+  appId: "1:814916661220:web:1f4a7e050c390f9c27e1f1"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.login = async function(){
+  const email = document.getElementById("email").value;
+  const pass = document.getElementById("pass").value;
+  await signInWithEmailAndPassword(auth,email,pass);
+  alert("Вход выполнен");
+  loadReviews();
+}
+
+window.addReview = async function(){
+  const text = document.getElementById("reviewText").value;
+  await addDoc(collection(db,"reviews"),{
+    text:text,
+    user:auth.currentUser.email,
+    created:Date.now()
+  });
+  loadReviews();
+}
+
+async function loadReviews(){
+  const querySnapshot = await getDocs(collection(db,"reviews"));
+  const list = document.getElementById("reviews");
+  list.innerHTML="";
+  querySnapshot.forEach((docu)=>{
+    list.innerHTML+=`
+    <div class="review">
+      <b>${docu.data().user}</b>
+      <p>${docu.data().text}</p>
+    </div>`;
+  });
+}
+
+onAuthStateChanged(auth,(user)=>{
+  if(user){
+    loadReviews();
+  }
+});
+
+</script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:#0b0f1c;color:#fff;overflow-x:hidden}
-header{position:fixed;width:100%;top:0;display:flex;justify-content:space-between;align-items:center;padding:20px 40px;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);z-index:999}
-.logo{color:orange;font-weight:bold;font-size:22px;animation:glow 2s infinite alternate}
-@keyframes glow{from{text-shadow:0 0 5px orange}to{text-shadow:0 0 20px orange}}
-nav a{color:#fff;margin-left:20px;text-decoration:none;cursor:pointer}
-section{padding:120px 20px 60px;text-align:center}
-.cards{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-top:40px}
-.card{background:#111827;padding:25px;width:260px;border-radius:15px;transition:0.3s}
-.card:hover{transform:translateY(-8px);box-shadow:0 0 20px orange}
-.price{color:orange;font-size:20px;margin:10px 0}
-button{padding:10px 15px;border:none;border-radius:8px;background:orange;font-weight:bold;cursor:pointer}
-input,textarea{padding:10px;border-radius:8px;border:none;width:100%;margin-top:10px}
-.forum{max-width:600px;margin:40px auto}
-.post{background:#1f2937;padding:15px;border-radius:10px;margin-bottom:15px;animation:fadeIn 0.5s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
-.popup{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:1000}
-.popup-content{background:#111827;padding:25px;border-radius:10px;width:300px;text-align:center}
-.social-box{position:fixed;top:0;right:-400px;width:300px;height:100%;background:#111827;padding:30px;transition:0.4s;z-index:1001}
-.social-box.active{right:0}
-.info-box{max-width:500px;margin:20px auto;display:none;animation:fadeIn 0.5s}
-.rating{color:gold}
-@media(max-width:768px){.cards{flex-direction:column;align-items:center}}
+body{
+  background:#0f0f1c;
+  color:white;
+  font-family:sans-serif;
+}
+.card{
+  background:#1b1b2e;
+  padding:20px;
+  margin:10px;
+  border-radius:12px;
+}
+button{
+  background:#ff0055;
+  color:white;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.review{
+  background:#222;
+  padding:10px;
+  margin:10px;
+  border-radius:10px;
+}
 </style>
 </head>
 
 <body>
 
-<header>
-<div class="logo">KRAKEN UC SHOP</div>
-<nav>
-<a onclick="toggleSocial()">Главная</a>
-<a href="#shop">Магазин</a>
-<a href="#forum">Отзывы</a>
-<a onclick="toggleInfo()">info by vyx</a>
-</nav>
-</header>
-
-<section id="shop">
-<h2>Выберите пакет UC</h2>
-<div class="cards">
+<h1>KRAKEN UC SHOP</h1>
 
 <div class="card">
-<h3>60 UC</h3>
-<div class="price">65 ₽</div>
-<button onclick="buy('60 UC','65 ₽')">Оплатить</button>
+<h3>Вход</h3>
+<input id="email" placeholder="email"><br><br>
+<input id="pass" type="password" placeholder="пароль"><br><br>
+<button onclick="login()">Войти</button>
 </div>
 
 <div class="card">
-<h3>325 UC</h3>
-<div class="price">315 ₽</div>
-<button onclick="buy('325 UC','315 ₽')">Оплатить</button>
+<h3>Добавить отзыв</h3>
+<textarea id="reviewText"></textarea><br><br>
+<button onclick="addReview()">Отправить</button>
 </div>
 
 <div class="card">
-<h3>600 + 120 UC</h3>
-<div class="price">650 ₽</div>
-<button onclick="buy('600 + 120 UC','650 ₽')">Оплатить</button>
+<h3>Отзывы</h3>
+<div id="reviews"></div>
 </div>
 
-<div class="card">
-<h3>1500 + 300 UC</h3>
-<div class="price">1500 ₽</div>
-<button onclick="buy('1500 + 300 UC','1500 ₽')">Оплатить</button>
-</div>
-
-</div>
-</section>
-
-<section id="forum">
-<h2>Отзывы покупателей ⭐</h2>
-
-<div class="forum">
-<input id="name" placeholder="Ваше имя">
-<textarea id="message" placeholder="Ваш отзыв"></textarea>
-<select id="rating">
-<option value="5">⭐⭐⭐⭐⭐</option>
-<option value="4">⭐⭐⭐⭐</option>
-<option value="3">⭐⭐⭐</option>
-</select>
-<button onclick="addPost()">Добавить отзыв</button>
-</div>
-
-<div id="posts"></div>
-</section>
-
-<div class="popup" id="buyPopup">
-<div class="popup-content">
-<h3>Введите ваш игровой ID</h3>
-<input id="gameId" placeholder="Game ID">
-<button onclick="sendToManager('@vyxeyes')">vyxeyes</button>
-<button onclick="sendToManager('@manager_jeka')">manager_jeka</button>
-<button onclick="closePopup()">Закрыть</button>
-</div>
-</div>
-
-<div class="social-box" id="socialBox">
-<h3>Наши соцсети</h3>
-<p><a href="https://t.me/pubgm_kraken" target="_blank">Telegram канал</a></p>
-<p><a href="https://www.tiktok.com/@pubgm_kraken02" target="_blank">TikTok</a></p>
-</div>
-
-<div class="info-box" id="infoBox">
-<p>
-Здравствуй читатель, этот пост создан для того, что бы сказать —
-создатель сайта является эдитором в тик токе,
-так что просьба подписаться на его тг канал
-</p>
-<br>
-<a href="https://t.me/vyxedith" target="_blank">
-<button>Перейти в Telegram</button>
-</a>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-
-const firebaseConfig = {
-apiKey: "AIzaSyAdE6pSRtNx9AlEFR2UrFO87_fpFXLg9C4",
-authDomain: "krakenuc-dc537.firebaseapp.com",
-projectId: "krakenuc-dc537",
-storageBucket: "krakenuc-dc537.firebasestorage.app",
-messagingSenderId: "814916661220",
-appId: "1:814916661220:web:1f4a7e050c390f9c27e1f1"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const postsDiv = document.getElementById("posts");
-
-onSnapshot(collection(db,"reviews"),(snapshot)=>{
-postsDiv.innerHTML="";
-snapshot.forEach(doc=>{
-const data = doc.data();
-postsDiv.innerHTML += `
-<div class="post">
-<b>${data.name}</b>
-<div class="rating">${"⭐".repeat(data.rating)}</div>
-<p>${data.message}</p>
-</div>`;
-});
-});
-
-window.addPost = async function(){
-const name = document.getElementById("name").value;
-const message = document.getElementById("message").value;
-const rating = document.getElementById("rating").value;
-if(!name || !message) return alert("Заполните поля");
-
-await addDoc(collection(db,"reviews"),{
-name,
-message,
-rating:Number(rating)
-});
-document.getElementById("name").value="";
-document.getElementById("message").value="";
-}
-
-let selected="";
-window.buy=function(pkg,price){
-selected=`Пакет: ${pkg}\nЦена: ${price}`;
-document.getElementById("buyPopup").style.display="flex";
-}
-
-window.closePopup=function(){
-document.getElementById("buyPopup").style.display="none";
-}
-
-window.sendToManager=function(username){
-const id=document.getElementById("gameId").value;
-if(!id) return alert("Введите ID");
-const text=encodeURIComponent(`${selected}\nGame ID: ${id}`);
-window.open(`https://t.me/${username.replace('@','')}?text=${text}`,"_blank");
-}
-
-window.toggleSocial=function(){
-document.getElementById("socialBox").classList.toggle("active");
-}
-
-window.toggleInfo=function(){
-const box=document.getElementById("infoBox");
-box.style.display=box.style.display==="block"?"none":"block";
-}
-</script>
+<a href="admin.html">Админ-панель</a>
 
 </body>
 </html>
