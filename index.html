@@ -47,14 +47,15 @@ nav a {
 
 .btn {
     display: inline-block;
-    margin: 20px 10px;
-    padding: 15px 30px;
+    margin: 15px 10px;
+    padding: 15px 25px;
     background: orange;
     color: black;
     font-weight: bold;
     text-decoration: none;
     border-radius: 8px;
     cursor: pointer;
+    border: none;
 }
 
 .section {
@@ -71,9 +72,9 @@ nav a {
 
 .card {
     background: #1e293b;
-    padding: 20px;
-    width: 250px;
-    border-radius: 10px;
+    padding: 25px;
+    width: 260px;
+    border-radius: 12px;
 }
 
 .price {
@@ -101,6 +102,7 @@ nav a {
     padding: 30px;
     border-radius: 10px;
     text-align: center;
+    width: 300px;
 }
 
 .manager-btn {
@@ -109,9 +111,10 @@ nav a {
     padding: 12px;
     background: orange;
     color: black;
-    text-decoration: none;
+    border: none;
     border-radius: 6px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .close-btn {
@@ -143,52 +146,53 @@ footer {
 <section class="hero">
 <h2>Купить <span>UC</span> для PUBG</h2>
 <p>Быстро. Надежно. Мгновенно.</p>
-<button class="btn" onclick="openPopup()">Оплатить</button>
 </section>
 
 <section class="section">
 <h2>Выберите пакет UC</h2>
+
 <div class="cards">
 
 <div class="card">
 <h3>60 UC</h3>
 <div class="price">65 ₽</div>
-<button class="btn" onclick="openPopup()">Оплатить</button>
+<button class="btn" onclick="openPopup('60 UC', '65 ₽')">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>325 UC</h3>
 <div class="price">315 ₽</div>
-<button class="btn" onclick="openPopup()">Оплатить</button>
+<button class="btn" onclick="openPopup('325 UC', '315 ₽')">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>600 + 120 UC</h3>
 <div class="price">650 ₽</div>
-<button class="btn" onclick="openPopup()">Оплатить</button>
+<button class="btn" onclick="openPopup('600 + 120 UC', '650 ₽')">Оплатить</button>
 </div>
 
 <div class="card">
 <h3>1500 + 300 UC</h3>
 <div class="price">1500 ₽</div>
-<button class="btn" onclick="openPopup()">Оплатить</button>
+<button class="btn" onclick="openPopup('1500 + 300 UC', '1500 ₽')">Оплатить</button>
 </div>
 
 </div>
 </section>
 
 <!-- POPUP -->
+
 <div class="popup" id="popup">
 <div class="popup-content">
 <h3>Выберите менеджера</h3>
 
-<a class="manager-btn" href="https://t.me/vyxeyes" target="_blank">
+<button class="manager-btn" onclick="sendToManager('vyxeyes')">
 @vyxeyes
-</a>
+</button>
 
-<a class="manager-btn" href="https://t.me/manager_jeka" target="_blank">
+<button class="manager-btn" onclick="sendToManager('manager_jeka')">
 @manager_jeka
-</a>
+</button>
 
 <div class="close-btn" onclick="closePopup()">Закрыть</div>
 </div>
@@ -199,12 +203,25 @@ footer {
 </footer>
 
 <script>
-function openPopup() {
+let selectedPackage = "";
+
+function openPopup(packageName, price) {
+    selectedPackage = "Пакет: " + packageName + "\nЦена: " + price;
     document.getElementById("popup").style.display = "flex";
 }
 
 function closePopup() {
     document.getElementById("popup").style.display = "none";
+}
+
+function sendToManager(username) {
+    let text = encodeURIComponent(
+        "Здравствуйте! Хочу купить:\n\n" +
+        selectedPackage +
+        "\n\nМой игровой ID: "
+    );
+
+    window.open("https://t.me/" + username + "?text=" + text, "_blank");
 }
 </script>
 
