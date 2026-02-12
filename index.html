@@ -1,404 +1,348 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRAKEN UC SHOP</title>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-<style>
-:root {
-    --bg-main: #0b1020;
-    --bg-card: rgba(16, 24, 48, 0.78);
-    --bg-card-strong: #121a35;
-    --text-main: #f4f7ff;
-    --text-secondary: #aeb8d6;
-    --brand: #7c4dff;
-    --brand-hover: #9b79ff;
-    --accent: #00d7ff;
-    --danger: #ff5f8f;
-    --shadow: 0 18px 40px rgba(7, 12, 32, 0.45);
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    background:
-      radial-gradient(circle at 10% 20%, rgba(124, 77, 255, 0.28), transparent 30%),
-      radial-gradient(circle at 90% 10%, rgba(0, 215, 255, 0.18), transparent 30%),
-      linear-gradient(145deg, #080c1a, #12193a 60%, #0a1128);
-    color: var(--text-main);
-    min-height: 100vh;
-}
-
-h1 {
-    text-align: center;
-    padding: 34px 20px 10px;
-    margin: 0;
-    font-size: clamp(1.9rem, 3vw, 2.8rem);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    text-shadow: 0 0 22px rgba(124, 77, 255, 0.45);
-}
-
-.subtitle {
-    margin: 0 auto 28px;
-    text-align: center;
-    color: var(--text-secondary);
-    max-width: 720px;
-    padding: 0 18px;
-}
-
-.container {
-    max-width: 1120px;
-    margin: auto;
-    padding: 0 20px 28px;
-    display: grid;
-    gap: 20px;
-}
-
-.card {
-    background: var(--bg-card);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    padding: 22px;
-}
-
-.card h2 {
-    margin-top: 0;
-    margin-bottom: 14px;
-}
-
-.auth-row {
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.products {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-}
-
-.product {
-    background: linear-gradient(160deg, #151f40, #111933);
-    border: 1px solid rgba(124, 77, 255, 0.35);
-    border-radius: 14px;
-    padding: 18px;
-    transition: 0.22s ease;
-    position: relative;
-}
-
-.product:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.34);
-    border-color: rgba(0, 215, 255, 0.58);
-}
-
-.price {
-    font-size: 1.28rem;
-    margin: 6px 0 12px;
-    color: var(--accent);
-    font-weight: 700;
-}
-
-button {
-    border: none;
-    background: linear-gradient(135deg, var(--brand), #5c32e0);
-    color: white;
-    padding: 10px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.2s ease;
-}
-
-button:hover {
-    background: linear-gradient(135deg, var(--brand-hover), #7149ee);
-    transform: translateY(-1px);
-}
-
-button:active {
-    transform: translateY(0);
-}
-
-button.secondary {
-    background: linear-gradient(135deg, #27325d, #1d264b);
-}
-
-button.secondary:hover {
-    background: linear-gradient(135deg, #324172, #25315d);
-}
-
-input, textarea {
-    width: 100%;
-    padding: 11px 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.18);
-    background: #0f1733;
-    color: white;
-}
-
-textarea {
-    min-height: 108px;
-    resize: vertical;
-}
-
-#reviews > div {
-    background: var(--bg-card-strong);
-    border-left: 4px solid var(--accent);
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    word-break: break-word;
-}
-
-.status {
-    min-height: 24px;
-    margin-top: 8px;
-    color: var(--text-secondary);
-}
-
-.status.error {
-    color: var(--danger);
-}
-
-.status.success {
-    color: #6bffa8;
-}
-
-.admin-panel {
-    display: none;
-    border-color: rgba(0, 215, 255, 0.4);
-}
-
-@media (max-width: 640px) {
-    .container {
-      padding: 0 14px 20px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Midasbuy PUBG Mock</title>
+  <style>
+    :root {
+      --bg: #091133;
+      --bg-soft: #111e4f;
+      --card: #1a275c;
+      --card-dark: #14204d;
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #f3f7ff;
+      --muted: #b2c0e6;
+      --accent: #1da8ff;
+      --gold: #ffc94a;
+      --green: #33d26a;
     }
 
-    .card {
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(#081134, #09143d 220px, #0a153f);
+    }
+
+    .top-hero {
+      min-height: 300px;
+      background:
+        linear-gradient(90deg, rgba(7, 15, 46, 0.95), rgba(7, 15, 46, 0.72) 45%, rgba(7, 15, 46, 0.2)),
+        radial-gradient(circle at 85% 12%, rgba(167, 219, 255, 0.35), transparent 30%),
+        radial-gradient(circle at 70% 20%, rgba(107, 255, 225, 0.24), transparent 30%),
+        linear-gradient(140deg, #1e356a, #2f4f8a 45%, #6ea1d7);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wrap { width: min(1280px, 94%); margin: 0 auto; }
+
+    .nav {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand { font-weight: 800; font-size: 30px; letter-spacing: 0.5px; color: #fff; }
+    .brand span { color: var(--accent); }
+
+    .menu { display: flex; gap: 28px; color: #d9e6ff; font-weight: 600; }
+    .menu a { color: inherit; text-decoration: none; opacity: 0.92; }
+
+    .userbar { display: flex; align-items: center; gap: 16px; color: #d8e7ff; }
+
+    .channel {
+      margin-top: 22px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      width: min(620px, 100%);
+      background: rgba(0, 10, 40, 0.35);
+      border: 1px solid var(--line);
+      border-radius: 16px;
       padding: 16px;
+      backdrop-filter: blur(4px);
     }
-}
-</style>
+
+    .avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #3ca4ff, #1e5bcd);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .channel h1 { margin: 0 0 6px; font-size: 38px; }
+    .badges { display: flex; gap: 8px; margin-bottom: 12px; }
+    .badge {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.22);
+    }
+
+    .login-btn {
+      border: none;
+      color: white;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #1cc5ff, #3477ff);
+      cursor: pointer;
+      width: 100%;
+      font-size: 21px;
+    }
+
+    .tabs {
+      margin-top: 20px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: rgba(1, 9, 35, 0.55);
+    }
+
+    .tabs .wrap {
+      height: 74px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: stretch;
+    }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #dde8ff;
+      font-weight: 700;
+      border-left: 1px solid rgba(255,255,255,0.03);
+    }
+    .tab.active { color: #5fd2ff; }
+
+    .main {
+      width: min(1280px, 94%);
+      margin: 26px auto 34px;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 22px;
+    }
+
+    .side,
+    .grid-card {
+      background: linear-gradient(180deg, var(--card), var(--card-dark));
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .banner {
+      grid-column: 1 / -1;
+      height: 112px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(56,66,93,.3), rgba(31,36,52,.7), rgba(66,76,103,.3));
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      letter-spacing: 2px;
+      color: #ffd975;
+      font-size: 42px;
+      font-weight: 900;
+    }
+
+    .side { padding: 20px; height: fit-content; }
+    .side h3 { margin: 0 0 14px; font-size: 18px; }
+    .filter-title { margin: 20px 0 8px; color: var(--muted); font-size: 14px; }
+
+    .field {
+      width: 100%;
+      background: #0c163c;
+      color: #f3f7ff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+    }
+
+    .filter-btn {
+      margin-top: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 9px;
+      padding: 11px;
+      color: white;
+      font-weight: 700;
+      background: linear-gradient(90deg, #0286ff, #0d52cc);
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(170px, 1fr));
+      gap: 18px;
+    }
+
+    .grid-card {
+      min-height: 220px;
+      padding: 14px;
+      position: relative;
+    }
+
+    .ribbon {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--green);
+      color: white;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .coin {
+      height: 95px;
+      border-radius: 10px;
+      background:
+        radial-gradient(circle at 40% 30%, rgba(255,230,138,.85), rgba(140,92,11,.78)),
+        linear-gradient(130deg, #d5a73a, #8f6617);
+      margin-bottom: 14px;
+    }
+
+    .amount {
+      font-size: 36px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      line-height: 1.1;
+    }
+
+    .price {
+      margin: 0;
+      color: var(--gold);
+      font-size: 33px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 1100px) {
+      .products { grid-template-columns: repeat(3, minmax(170px, 1fr)); }
+    }
+
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+      .products { grid-template-columns: repeat(2, minmax(170px, 1fr)); }
+      .menu { display: none; }
+      .channel h1 { font-size: 30px; }
+    }
+
+    @media (max-width: 600px) {
+      .products { grid-template-columns: 1fr; }
+      .tabs .wrap { grid-template-columns: repeat(2, 1fr); }
+      .channel { flex-direction: column; align-items: flex-start; }
+      .channel h1 { font-size: 26px; }
+    }
+  </style>
 </head>
 <body>
+  <header class="top-hero">
+    <div class="wrap nav">
+      <div class="brand"><span>◆</span>Midasbuy</div>
+      <nav class="menu">
+        <a href="#">Главная</a>
+        <a href="#">Новости</a>
+        <a href="#">Центр помощи</a>
+        <a href="#">Прямой эфир и видео</a>
+      </nav>
+      <div class="userbar">
+        <span>🔔 Notifications</span>
+        <span>👤 Войти</span>
+        <span>🇷🇺 RU</span>
+      </div>
+    </div>
 
-<h1>KRAKEN UC SHOP</h1>
-<p class="subtitle">Покупка UC PUBG, авторизация и отзывы — в одном месте. Обновили логику регистрации и улучшили интерфейс.</p>
+    <div class="wrap">
+      <section class="channel">
+        <div class="avatar">PUBG</div>
+        <div>
+          <h1>PUBG MOBILE</h1>
+          <div class="badges">
+            <span class="badge">✔ Официальный</span>
+            <span class="badge">◉ Подписаться</span>
+          </div>
+          <button class="login-btn">Войти Midasbuy ›</button>
+        </div>
+      </section>
+    </div>
 
-<div class="container">
+    <div class="tabs">
+      <div class="wrap">
+        <div class="tab active">👍 ПОКУПКА</div>
+        <div class="tab">🎫 ВЫКУП</div>
+        <div class="tab">🛒 МАГАЗИН</div>
+        <div class="tab">🔥 СОБЫТИЯ</div>
+      </div>
+    </div>
+  </header>
 
-<div class="card">
-<h2>Вход и регистрация</h2>
-<div class="auth-row">
-  <input type="email" id="email" placeholder="Email" autocomplete="email">
-  <input type="password" id="password" placeholder="Пароль" autocomplete="current-password">
-</div>
-<div class="actions" style="margin-top:10px;">
-  <button type="button" id="loginBtn">Войти</button>
-  <button type="button" id="registerBtn" class="secondary">Регистрация</button>
-</div>
-<div id="authStatus" class="status"></div>
-</div>
+  <main class="main">
+    <div class="banner">PURCHASE REWARD</div>
 
-<div class="card">
-<h2>UC PUBG</h2>
-<div class="products">
-  <div class="product">
-    <h3>60 UC</h3>
-    <p class="price">65 ₽</p>
-    <button type="button" data-name="60 UC" data-price="65" class="buy-btn">Купить</button>
-  </div>
-  <div class="product">
-    <h3>325 UC</h3>
-    <p class="price">319 ₽</p>
-    <button type="button" data-name="325 UC" data-price="319" class="buy-btn">Купить</button>
-  </div>
-  <div class="product">
-    <h3>660 UC</h3>
-    <p class="price">619 ₽</p>
-    <button type="button" data-name="660 UC" data-price="619" class="buy-btn">Купить</button>
-  </div>
-</div>
-</div>
+    <aside class="side">
+      <h3>🗑 Очистить</h3>
+      <div class="filter-title">Оплата</div>
+      <label><input type="checkbox" /> Credit Card / Debit Card / Prepaid</label>
 
-<div class="card">
-<h2>Добавить отзыв</h2>
-<textarea id="reviewText" placeholder="Ваш отзыв"></textarea>
-<div class="actions">
-  <button type="button" id="reviewBtn">Отправить</button>
-</div>
-<div id="reviewStatus" class="status"></div>
-</div>
+      <div class="filter-title">Количество</div>
+      <input class="field" placeholder="Мин." />
+      <input class="field" placeholder="Макс." />
+      <button class="filter-btn">Фильтровать</button>
+    </aside>
 
-<div class="card">
-<h2>Отзывы</h2>
-<div id="reviews"></div>
-</div>
-
-<div class="card admin-panel" id="adminPanel">
-<h2>Админ-панель</h2>
-<p>Удаление отзывов доступно в <a href="admin.html" style="color: var(--accent);">панели администратора</a>.</p>
-</div>
-
-</div>
-
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAdE6pSRtNx9AlEFR2UrFO87_fpFXLg9C4",
-  authDomain: "krakenuc-dc537.firebaseapp.com",
-  projectId: "krakenuc-dc537",
-  storageBucket: "krakenuc-dc537.firebasestorage.app",
-  messagingSenderId: "814916661220",
-  appId: "1:814916661220:web:1f4a7e050c390f9c27e1f1",
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const authStatus = document.getElementById("authStatus");
-const reviewInput = document.getElementById("reviewText");
-const reviewStatus = document.getElementById("reviewStatus");
-const reviewsContainer = document.getElementById("reviews");
-
-function setStatus(target, text, type = "") {
-  target.textContent = text;
-  target.className = `status ${type}`.trim();
-}
-
-function getCredentials() {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
-
-  if (!email || !password) {
-    setStatus(authStatus, "Введите email и пароль.", "error");
-    return null;
-  }
-
-  return { email, password };
-}
-
-async function register() {
-  const credentials = getCredentials();
-  if (!credentials) {
-    return;
-  }
-
-  try {
-    const result = await auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
-    await db.collection("users").doc(result.user.uid).set({
-      email: credentials.email,
-      role: "user",
-      blocked: false,
-      createdAt: Date.now(),
-    }, { merge: true });
-    setStatus(authStatus, "Регистрация прошла успешно.", "success");
-  } catch (error) {
-    setStatus(authStatus, `Ошибка регистрации: ${error.message}`, "error");
-  }
-}
-
-async function login() {
-  const credentials = getCredentials();
-  if (!credentials) {
-    return;
-  }
-
-  try {
-    await auth.signInWithEmailAndPassword(credentials.email, credentials.password);
-    setStatus(authStatus, "Вход выполнен.", "success");
-  } catch (error) {
-    setStatus(authStatus, `Ошибка входа: ${error.message}`, "error");
-  }
-}
-
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    checkAdmin(user.uid);
-  }
-});
-
-function checkAdmin(uid) {
-  db.collection("users").doc(uid).get().then((doc) => {
-    if (doc.exists && doc.data().role === "admin") {
-      document.getElementById("adminPanel").style.display = "block";
-    }
-  }).catch(() => {
-    // ignored, auth status already shown to the user
-  });
-}
-
-function buy(name, price) {
-  alert(`Заказ: ${name} на ${price} ₽ оформлен.`);
-}
-
-async function addReview() {
-  const text = reviewInput.value.trim();
-  const user = auth.currentUser;
-
-  if (!text) {
-    setStatus(reviewStatus, "Напишите отзыв перед отправкой.", "error");
-    return;
-  }
-
-  try {
-    await db.collection("reviews").add({
-      text,
-      user: user?.email || "Гость",
-      uid: user?.uid || null,
-      date: Date.now(),
-    });
-    reviewInput.value = "";
-    setStatus(reviewStatus, "Отзыв отправлен.", "success");
-  } catch (error) {
-    setStatus(reviewStatus, `Ошибка отправки: ${error.message}`, "error");
-  }
-}
-
-db.collection("reviews").orderBy("date", "desc")
-.onSnapshot((snapshot) => {
-  reviewsContainer.innerHTML = "";
-  snapshot.forEach((doc) => {
-    const div = document.createElement("div");
-    const data = doc.data();
-    const author = data.user ? `<strong>${data.user}</strong><br>` : "";
-    div.innerHTML = `${author}${data.text || ""}`;
-    reviewsContainer.appendChild(div);
-  });
-}, (error) => {
-  setStatus(reviewStatus, `Не удалось загрузить отзывы: ${error.message}`, "error");
-});
-
-document.getElementById("registerBtn").addEventListener("click", register);
-document.getElementById("loginBtn").addEventListener("click", login);
-document.getElementById("reviewBtn").addEventListener("click", addReview);
-document.querySelectorAll(".buy-btn").forEach((button) => {
-  button.addEventListener("click", () => {
-    buy(button.dataset.name, button.dataset.price);
-  });
-});
-</script>
-
+    <section class="products">
+      <article class="grid-card">
+        <span class="ribbon">Popular</span>
+        <div class="coin"></div>
+        <p class="amount">60</p>
+        <p class="price">0.99 USD</p>
+      </article>
+      <article class="grid-card">
+        <span class="ribbon">Popular</span>
+        <div class="coin"></div>
+        <p class="amount">600 + 60</p>
+        <p class="price">9.99 USD</p>
+      </article>
+      <article class="grid-card">
+        <div class="coin"></div>
+        <p class="amount">30</p>
+        <p class="price">0.49 USD</p>
+      </article>
+      <article class="grid-card">
+        <div class="coin"></div>
+        <p class="amount">300 + 25</p>
+        <p class="price">4.99 USD</p>
+      </article>
+      <article class="grid-card">
+        <div class="coin"></div>
+        <p class="amount">1 500 + 300</p>
+        <p class="price">24.99 USD</p>
+      </article>
+      <article class="grid-card">
+        <div class="coin"></div>
+        <p class="amount">3 000 + 850</p>
+        <p class="price">49.99 USD</p>
+      </article>
+      <article class="grid-card">
+        <div class="coin"></div>
+        <p class="amount">6 000 + 2 100</p>
+        <p class="price">99.99 USD</p>
+      </article>
+      <article class="grid-card">
+        <div class="coin"></div>
+        <p class="amount">12 000 + 4 200</p>
+        <p class="price">199.99 USD</p>
+      </article>
+    </section>
+  </main>
 </body>
 </html>
